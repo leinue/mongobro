@@ -42,7 +42,6 @@
 		if(mongoDB.MongoDBNameList === '' || mongoDB.MongoDBUpdated === true){
 			mongoDB.MongoDBNameList = JSON.parse(localStorage.MongoBrowserDB);
 			this.broadcastMongoDbNoUpdated();
-
 		}
 
 		return mongoDB.MongoDBNameList;
@@ -90,6 +89,7 @@
 		}else{
 			databasesNameList[nameId] = new_name;
 			this.writeMongoObj(databasesNameList);
+			this.setCurrentDBName(new_name);
 			return this;
 		}
 			
@@ -116,9 +116,13 @@
 		return mongoDB.currentDBName;
 	}
 
+	mongoBro.prototype.setCurrentDBName = function(dbname){
+		mongoDB.currentDBName = dbname;
+	}
+
 	mongoBro.prototype.removeDB = function(dbname) {
 
-		var nameId = this.isExists();
+		var nameId = this.isExists(dbname);
 
 		if(!nameId){
 			return false;
@@ -127,7 +131,12 @@
 		var databasesNameList = this.getMongoObj();
 
 		delete databasesNameList[nameId];
+		databasesNameList.length-=1;
 		this.writeMongoObj(databasesNameList);
+
+		if(this.getCurrentDBName() === dbname){
+			this.setCurrentDBName('');
+		}
 
 		return this;
 
@@ -151,3 +160,7 @@ console.log(mongoBro.createDB('fuck').getDatabases());
 console.log(mongoBro.updateDB('fuck','bitch').getDatabases());
 
 console.log(mongoBro.getCurrentDBName());
+
+console.log(mongoBro.removeDB('bitch').getDatabases());
+
+console.log(mongoBro.use('fuck').getCurrentDBName());
