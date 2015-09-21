@@ -14,6 +14,14 @@
 		}
 	}
 
+	mongoBro.prototype.broadcastMongoDbUpdated = function() {
+		mongoDB.MongoDBUpdated = true;
+	}
+
+	mongoBro.prototype.broadcastMongoDbNoUpdated = function() {
+		mongoDB.MongoDBUpdated = false;
+	}
+
 	mongoBro.prototype.getDatabases = function() {
 		return this.getMongoObj();
 	}
@@ -33,17 +41,19 @@
 
 		if(mongoDB.MongoDBNameList === '' || mongoDB.MongoDBUpdated === true){
 			mongoDB.MongoDBNameList = JSON.parse(localStorage.MongoBrowserDB);
+			this.broadcastMongoDbNoUpdated();
+
 		}
 
 		return mongoDB.MongoDBNameList;
 	}
 
-	mongoBro.prototype.writeMongoObj = function(str){
+	mongoBro.prototype.writeMongoObj = function(str) {
 		localStorage.MongoBrowserDB = JSON.stringify(str);
 		return this;
 	}
 
-	mongoBro.prototype.create = function(dbname) {
+	mongoBro.prototype.createDB = function(dbname) {
 		if(dbname === null || dbname === '') {
 			return false;
 		}
@@ -64,29 +74,52 @@
 		mongoDB.currentDBName = dbname;
 
 		this.writeMongoObj(databasesExists);
-		mongoDB.MongoDBUpdated = true;
+		this.broadcastMongoDbUpdated();
 
 		return this;
 	}
 
+	mongoBro.prototype.updateDB = function(original_name,new_name){
+
+		var databasesNameList = this.getMongoObj();
+
+		var nameId=this.isExists(original_name);
+
+		if(!nameId){
+			return false;
+		}else{
+			databasesNameList[nameId] = new_name;
+			this.writeMongoObj(databasesNameList);
+			this.broadcastMongoDbUpdated();
+			return this;
+		}
+			
+	}
+
 	mongoBro.prototype.isExists = function(dbname) {
 		var databasesNameList = this.getMongoObj();
-		
+
 		for (var i = 0; i < databasesNameList.length; i++) {
 			if(dbname === databasesNameList[i]){
-				return true;
+				return i;
 			}
 		}
 
 		return false;
 	}
 
-	mongoBro.prototype.useCollection = function(tableName) {
+	mongoBro.prototype.use = function(dbname) {
+		mongoDB.currentDBName = dbname;
+		return this;
+	}
 
+	mongoBro.prototype.getCurrentDBName = function(){
+		return mongoDB.currentDBName;
 	}
 
 	mongoBro.prototype.removeAllDatabases = function() {
 		localStorage.MongoBrowserDB = '';
+		return this;
 	}
 
 	window.mongoBro = new mongoBro();
@@ -95,4 +128,10 @@
 
 mongoBro.removeAllDatabases();
 
-console.log(mongoBro.create('test').getDatabases());
+console.log(mongoBro.createDB('test').getDatabases());
+
+console.log(mongoBro.createDB('fuck').getDatabases());
+
+console.log(mongoBro.updateDB('fuck','bitch').getDatabases());
+
+console.log(mongoBro.getCurrentDBName());
