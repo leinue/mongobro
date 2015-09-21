@@ -50,6 +50,7 @@
 
 	mongoBro.prototype.writeMongoObj = function(str) {
 		localStorage.MongoBrowserDB = JSON.stringify(str);
+		this.broadcastMongoDbUpdated();
 		return this;
 	}
 
@@ -74,7 +75,6 @@
 		mongoDB.currentDBName = dbname;
 
 		this.writeMongoObj(databasesExists);
-		this.broadcastMongoDbUpdated();
 
 		return this;
 	}
@@ -90,7 +90,6 @@
 		}else{
 			databasesNameList[nameId] = new_name;
 			this.writeMongoObj(databasesNameList);
-			this.broadcastMongoDbUpdated();
 			return this;
 		}
 			
@@ -115,6 +114,23 @@
 
 	mongoBro.prototype.getCurrentDBName = function(){
 		return mongoDB.currentDBName;
+	}
+
+	mongoBro.prototype.removeDB = function(dbname) {
+
+		var nameId = this.isExists();
+
+		if(!nameId){
+			return false;
+		}
+
+		var databasesNameList = this.getMongoObj();
+
+		delete databasesNameList[nameId];
+		this.writeMongoObj(databasesNameList);
+
+		return this;
+
 	}
 
 	mongoBro.prototype.removeAllDatabases = function() {
