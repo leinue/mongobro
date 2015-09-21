@@ -65,7 +65,7 @@
 			databasesExists[0] = dbname;
 			databasesExists.length = 1;
 		}else{
-			if(!this.isExists()){
+			if(this.isExists() === false){
 				databasesExists[databasesExists.length] = dbname;
 				databasesExists.length += 1;
 			}
@@ -84,7 +84,7 @@
 
 		var nameId=this.isExists(original_name);
 
-		if(!nameId){
+		if(nameId === false){
 			return false;
 		}else{
 			databasesNameList[nameId] = new_name;
@@ -108,7 +108,13 @@
 	}
 
 	mongoBro.prototype.use = function(dbname) {
-		mongoDB.currentDBName = dbname;
+
+		this.setCurrentDBName(dbname);
+
+		if(this.isExists(dbname) === false){
+			this.setCurrentDBName('');
+		}
+		
 		return this;
 	}
 
@@ -124,7 +130,7 @@
 
 		var nameId = this.isExists(dbname);
 
-		if(!nameId){
+		if(nameId === false){
 			return false;
 		}
 
@@ -163,4 +169,4 @@ console.log(mongoBro.getCurrentDBName());
 
 console.log(mongoBro.removeDB('bitch').getDatabases());
 
-console.log(mongoBro.use('fuck').getCurrentDBName());
+console.log(mongoBro.use('test').getCurrentDBName());
