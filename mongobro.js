@@ -195,8 +195,6 @@
 			tableExists.length += 1;
 		}
 
-		console.log(tableExists);
-
 		this.writeMongoTableDB(tableExists);
 
 		return this;
@@ -336,6 +334,14 @@
 
 	mongoBro.prototype.updateTable = function(oldName,newName) {
 
+		var res = this.updateTableList(oldName,newName);
+
+		if(res !== false) {
+			localStorage[newName] = localStorage[oldName];
+			localStorage[oldName] = '';
+		}
+
+		return this;
 
 	}
 
@@ -357,7 +363,19 @@
 
 	mongoBro.prototype.getTableByDBName = function(dbname) {
 
+		var tableList = this.getTableList();
 
+		var result = [];
+
+		for (var i = 0; i < tableList.length; i++) {
+			var databaseName = tableList[i].database;
+
+			if(databaseName == dbname){
+				result.push(tableList[i].tableName);
+			}
+		};
+
+		return result;
 
 	}
 
@@ -391,3 +409,5 @@ console.log(mongoBro.createTable('test','xieyang',{
 	name : 'xieyang',
 	sex : 'male' 
 }).getTable('xieyang'));
+
+console.log(mongoBro.getTableByDBName('test'));
