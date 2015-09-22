@@ -166,6 +166,11 @@
 		return isLocalStorageNull('MongoBrowserTable');
 	}
 
+	mongoBro.prototype.writeMongoTableDB = function(obj) {
+		localStorage['MongoDBTableList'] = JSON.stringify(obj);
+		this.broadcastMongoDbTableUpdated();
+	}
+
 	mongoBro.prototype.addTableList = function(tableName) {
 
 		if(tableName === null || tableName === '') {
@@ -193,7 +198,7 @@
 
 		var tableNameId = this.isTableExists(tableName);
 
-		if(tableNameId === false){
+		if(tableNameId === false) {
 			return false;
 		}
 
@@ -201,16 +206,32 @@
 
 		if(tableList === null) {
 			delete tableList[tableNameId];
-			localStorage['MongoDBTableList'] = JSON.stringify(tableList);
-			this.broadcastMongoDbTableUpdated();
+			this.writeMongoTableDB(tableList);
 		}
 
 		return this;
 
 	}
 
-	mongoBro.prototype.updateTableList = function() {
+	mongoBro.prototype.updateTableList = function(oldName,newName) {
+		
+		if(oldName === null || oldName === '' || newName === null || newName === ''){
+			return false;
+		}
 
+		var tableNameId = this.isTableExists(oldName);
+
+		if(tableNameId === false) {
+			return false;
+		}
+
+		var tableList = this.getTableList();
+
+		tableList[tableNameId] = newName;
+		
+		this.writeMongoTableDB(tableList);
+
+		return this;
 	}
 
 	mongoBro.prototype.getTableList = function() {
