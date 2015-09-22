@@ -12,7 +12,7 @@
 
 	var mongoDBTable = {
 		MongoDBTableList : '',
-		mongoDBTableUpdated : false
+		mongoDBTableUpdated : false,
 	};
 
 	function mongoBro(){
@@ -317,6 +317,7 @@
 	}
 
 	mongoBro.prototype.isTableExists = function(tableName) {
+		
 		var tableList = this.getTableList();
 
 		if(tableList === null) {
@@ -330,17 +331,33 @@
 		};
 
 		return false;
+
 	}
 
 	mongoBro.prototype.updateTable = function(oldName,newName) {
+
 
 	}
 
 	mongoBro.prototype.removeTable = function(tableName) {
 
+		var tableNameId = this.isTableExists(tableName);
+
+		if(tableNameId === false) {
+			return false;
+		}
+
+		this.removeTableList(tableName);
+
+		localStorage[tableName] = '';
+
+		return this;
+
 	}
 
 	mongoBro.prototype.getTableByDBName = function(dbname) {
+
+
 
 	}
 
