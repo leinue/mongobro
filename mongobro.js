@@ -1,10 +1,19 @@
 (function(window){
 
+	var isLocalStorageNull = function(key) {
+		return typeof localStorage[key] == 'undefined'?true:(localStorage[key] == ''?true:false);
+	};
+
 	var mongoDB = {
 		currentDBName : '',
 		MongoDBNameList : '',
 		MongoDBUpdated : false
-	}
+	};
+
+	var mongoDBTable = {
+		MongoDBTableList : '',
+		mongoDBTableUpdated : false
+	};
 
 	function mongoBro(){
 		if(!this.isMongoNull()){
@@ -153,6 +162,146 @@
 		return this;
 	}
 
+	mongoBro.prototype.isTableNull = function() {
+		return isLocalStorageNull('MongoBrowserTable');
+	}
+
+	mongoBro.prototype.addTableList = function(tableName) {
+
+		if(tableName === null || tableName === '') {
+			return false;
+		}
+
+		var tableExists = this.getTableList();
+
+		if(tableExists === null) {
+			tableExists = {};
+			tableExists.length = 1;
+			tableExists[0] = tableName;
+		}else{
+			tableExists[tableExists.length] = tableName;
+			tableExists.length += 1;
+		}
+
+		this.broadcastMongoDbTableUpdated();
+
+		return this;
+
+	}
+
+	mongoBro.prototype.removeTableList = function(tableName) {
+
+		var tableNameId = this.isTableExists(tableName);
+
+		if(tableNameId === false){
+			return false;
+		}
+
+		var tableList = this.getTableList();
+
+		if(tableList === null) {
+			delete tableList[tableNameId];
+			localStorage['MongoDBTableList'] = JSON.stringify(tableList);
+			this.broadcastMongoDbTableUpdated();
+		}
+
+		return this;
+
+	}
+
+	mongoBro.prototype.updateTableList = function() {
+
+	}
+
+	mongoBro.prototype.getTableList = function() {
+
+		if(this.isTableNull()) {
+			return null;
+		}
+
+		if(this.isTableUpdated()) {
+			var tableList = JSON.parse(localStorage['MongoBrowserTable']);
+			this.broadcastMongoDbTableNoUpdated();
+		}else{
+			var tableList = mongoDBTable.MongoDBTableList;
+		}
+		
+		return tableList;
+
+	}
+
+	mongoBro.prototype.isTableUpdated = function() {
+		return mongoDBTable.mongoDBTableUpdated;
+	}
+
+	mongoBro.prototype.broadcastMongoDbTableUpdated = function() {
+		mongoDBTable.mongoDBTableUpdated = true;
+	}
+
+	mongoBro.prototype.broadcastMongoDbTableNoUpdated = function() {
+		mongoDBTable.mongoDBTableUpdated = false;
+	}
+
+	mongoBro.prototype.createTable = function(dbname,tableName,data) {
+
+		dbname = dbname === null ? getCurrentDBName() : dbname;
+
+		if(dbname === null || dbname === '' || tableName === '' || tableName === null ){
+			return false;
+		}
+
+		data = data === null ? '': data;
+
+		var dbnameId = this.isExists(dbname);
+
+		if(dbnameId === false){
+			return false;
+		}else{
+			var tableObj = {
+				dbname : dbname,
+				tableName : tableName,
+				data : {
+					data
+				}
+			}
+			localStorage[tableName] = JSON.stringify(tableObj);
+		}
+
+		return this;
+	}
+
+	mongoBro.prototype.isTableExists = function(tableName) {
+		var tableList = this.getTableList();
+
+		if(tableList === null) {
+			return false;
+		}
+
+		for (var i = 0; i < tableList.length; i++) {
+			if(tableList[i] === tableName) {
+				return i;
+			}
+		};
+
+		return false;
+	}
+
+	mongoBro.prototype.updateTable = function(oldName,newName) {
+
+	}
+
+	mongoBro.prototype.removeTable = function(tableName) {
+
+	}
+
+	mongoBro.prototype.getTableByDBName = function(dbname) {
+
+	}
+
+	mongoBro.prototype.getTable = function(tableName) {
+		return JSON.parse(localStorage[tableName]);
+	}
+
 	window.mongoBro = new mongoBro();
 
 })(window);
@@ -170,3 +319,10 @@ console.log(mongoBro.getCurrentDBName());
 console.log(mongoBro.removeDB('bitch').getDatabases());
 
 console.log(mongoBro.use('test').getCurrentDBName());
+
+console.log(mongoBro.createTable('test','person').getTable('person'));
+
+console.log(mongoBro.createTable('test','xieyang',{
+	name : 'xieyang',
+	sex : 'male' 
+}).getTable('xieyang'));
