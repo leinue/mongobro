@@ -159,11 +159,12 @@
 
 	mongoBro.prototype.removeAllDatabases = function() {
 		localStorage.MongoBrowserDB = '';
+		this.removeAlltableList();
 		return this;
 	}
 
 	mongoBro.prototype.isTableNull = function() {
-		return isLocalStorageNull('MongoBrowserTable');
+		return isLocalStorageNull('MongoDBTableList');
 	}
 
 	mongoBro.prototype.writeMongoTableDB = function(obj) {
@@ -171,7 +172,7 @@
 		this.broadcastMongoDbTableUpdated();
 	}
 
-	mongoBro.prototype.addTableList = function(tableName) {
+	mongoBro.prototype.addTableList = function(database,tableName) {
 
 		if(tableName === null || tableName === '') {
 			return false;
@@ -179,16 +180,24 @@
 
 		var tableExists = this.getTableList();
 
-		if(tableExists === null) {
+		if(tableExists === null || tableExists === '') {
 			tableExists = {};
 			tableExists.length = 1;
-			tableExists[0] = tableName;
+			tableExists[0] = {
+				tableName : tableName,
+				database : database
+			};
 		}else{
-			tableExists[tableExists.length] = tableName;
+			tableExists[tableExists.length] = {
+				tableName : tableName,
+				database : database				
+			};
 			tableExists.length += 1;
 		}
 
-		this.broadcastMongoDbTableUpdated();
+		console.log(tableExists);
+
+		this.writeMongoTableDB(tableExists);
 
 		return this;
 
@@ -211,6 +220,13 @@
 
 		return this;
 
+	}
+
+	mongoBro.prototype.removeAlltableList = function(){
+
+		localStorage['MongoDBTableList'] = '';
+
+		return this;
 	}
 
 	mongoBro.prototype.updateTableList = function(oldName,newName) {
@@ -241,9 +257,15 @@
 		}
 
 		if(this.isTableUpdated()) {
-			var tableList = JSON.parse(localStorage['MongoBrowserTable']);
+			var tableList = JSON.parse(localStorage['MongoDBTableList']);
+			mongoDBTable.MongoDBTableList = tableList;
 			this.broadcastMongoDbTableNoUpdated();
 		}else{
+			if(mongoDBTable.MongoDBTableList === ''){
+				var tableList = JSON.parse(localStorage['MongoDBTableList']);
+				mongoDBTable.MongoDBTableList = tableList;
+				this.broadcastMongoDbTableNoUpdated();	
+			}
 			var tableList = mongoDBTable.MongoDBTableList;
 		}
 		
@@ -285,6 +307,9 @@
 					data
 				}
 			}
+
+			this.addTableList(dbname,tableName);
+
 			localStorage[tableName] = JSON.stringify(tableObj);
 		}
 
@@ -342,6 +367,8 @@ console.log(mongoBro.removeDB('bitch').getDatabases());
 console.log(mongoBro.use('test').getCurrentDBName());
 
 console.log(mongoBro.createTable('test','person').getTable('person'));
+
+console.log(mongoBro.getTableList());
 
 console.log(mongoBro.createTable('test','xieyang',{
 	name : 'xieyang',
