@@ -410,4 +410,12 @@ console.log(mongoBro.createTable('test','xieyang',{
 	sex : 'male' 
 }).getTable('xieyang'));
 
-console.log(mongoBro.getTableByDBName('test'));
+var tableInTest = mongoBro.getTableByDBName('test');
+
+console.log(tableInTest);
+
+console.log('输出test数据库中的表数据');
+
+for (var i = 0; i < tableInTest.length; i++) {
+	console.log(mongoBro.getTable(tableInTest[i]));
+};
