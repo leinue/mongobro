@@ -2,14 +2,48 @@ $(function() {
 
 	//项目基本配置
 
+	var _document = $(document);
+
 	var config = {
 		DEBUG : true //是否为DEBUG状态
 	};
 
+	//用于输出数据的函数,仅当DEBUG状态为真时触发
+	var debug = function(str) {
+		if(config.DEBUG){
+			console.log(str);
+		}
+	};
+
+	//终端窗口状态
 	var terminalStatus = {
-		isMaxified : false,
-		isClosed : true,
-		isHided : false,
+		isMaxified : false, //是否最大化,默认为假
+		isMinified : false, //是否最小化,默认为假
+		isClosed : true, //是否被关闭,默认为真
+		isShow : false //是否被显示,默认为假
+	};
+
+	var terminalConfig = {
+		TIPS : '$_> '
+	};
+
+	//终端命令列表
+	var terminalCommands = {
+
+		currentFunctionName : '', //当前的函数名
+
+		clear : function (obj) { //清空控制台窗口内容
+			obj.val(terminalConfig.TIPS);
+		},
+
+		cmd : function (func,args) {
+			if(func.length!==1){
+
+				var obj = eval('terminalCommands.'+func);
+				new obj(args);
+			}
+		}
+
 	};
 
 	//***************************UI控制层***************************
@@ -38,6 +72,14 @@ $(function() {
 
 	//终端右边按钮
 
+	//终端位置初始化
+	var mongoTerminalObj = $('.mongo-terminal');
+	mongoTerminalObj.css({
+		'left' : ((_document.width()-mongoTerminalObj.width())/2)+'px',
+		'top' : ((_document.height()-mongoTerminalObj.height())/2-150)+'px'
+	});
+
+	//最大化终端窗口
 	var maxifyTerminal = function() {
 		if(terminalStatus.isMaxified){
 			$('.mongo-terminal').css({
@@ -55,16 +97,32 @@ $(function() {
 			});
 		}
 		terminalStatus.isMaxified = !terminalStatus.isMaxified;
+		terminalStatus.isShow = true;
+		terminalStatus.isMinified = false;
 	};
 
+	//最小化终端窗口
 	var minifyTerminal = function() {
 		$('.mongo-terminal').hide();
-	}
+		terminalStatus.isMinified = true;
+		terminalStatus.isShow = true;
+		terminalStatus.isMaxified = false;
+	};
 
-	var closeTerminal = function() {
+	//关闭或打开终端窗口
+	var toggleTerminal = function() {
 		$('.mongo-terminal').fadeToggle(200);
-	}
+		$('#cmd').focus();
+		terminalStatus.isClosed = !terminalStatus.isClosed;
+		terminalStatus.isShow = !terminalStatus.isShow;
+		if(!terminalStatus.isMinified) {
+			$('#cmd').val("Welcome to MongoBro (version 1.0.0-preview20151010)\r\n\r\nRun 'h' to dplay the help index.\r\nRun 'h <command>' to display help for specific commands.\r\n\r\n"+terminalConfig.TIPS);
+		}
+		terminalStatus.isMinified = !terminalStatus.isMinified;
+		// terminalStatus.isMaxified = !terminalStatus.isMaxified;
+	};
 
+	//终端控制按钮点击事件
 	$('.terminal-control-btn ul li').click(function(){
 		var thisId = $(this).attr('id');
 		switch (thisId) {
@@ -75,7 +133,7 @@ $(function() {
 				maxifyTerminal();
 				break;
 			case 'close' :
-				closeTerminal();
+				toggleTerminal();
 				break;
 		}
 	});
@@ -85,10 +143,110 @@ $(function() {
 		maxifyTerminal();
 	});
 
+	//终端标题栏拖动事件
+	var dragging = false;
+	var dragIsFirst = true;
+    var iX, iY;
+    $(".terminal-top").mousedown(function(e) {
+        dragging = true;
+        $(".mongo-terminal").css({"transition":'none'});
+        iX = e.clientX - this.offsetLeft;
+        iY = e.clientY - this.offsetTop;
+        this.setCapture && this.setCapture();
+        return false;
+    });
+    document.onmousemove = function(e) {
+        if (dragging) {
+	        var e = e || window.event;
+	        if (!dragIsFirst){
+	        	var oX = e.clientX - iX + 830;
+	        	var oY = e.clientY - iY - 300;
+	        }else{
+	        	var oX = e.clientX - iX + 170;
+	        	var oY = e.clientY - iY + 40;
+	        }
+	        $(".mongo-terminal").css({"left":oX + "px", "top":oY + "px"});
+	        return false;
+        }
+    };
+    $(document).mouseup(function(e) {
+        dragging = false;
+        dragIsFirst = true;
+        $(".mongo-terminal")[0].releaseCapture();
+        $(".mongo-terminal").css({"transition":'all 0.6s ease 0s'});
+        iX = 0;
+        iY = 0;
+        e.cancelBubble = true;
+    });
+
+	//菜单栏终端选项点击事件
+	$('#main-menu ul li#menu-terminal').click(function(){
+		toggleTerminal();
+	});
+
+	//获得控制台窗口的全部内容
+	var getTerminalAllContent = function(obj) {
+		var _this = $(obj);
+    	var e = _this.val();
+    	return e;
+	};
+
+	//为控制台窗口添加新行
+	var appendNewLineInTerminal = function(e,obj) {
+		$(obj).val(e + '\r\n'+terminalConfig.TIPS);
+	}
+
+	//获得用户输入的命令
+	var getCMD = function(obj,count) {
+		count = count == null ? 2 : count;
+		var e = getTerminalAllContent(obj);
+    	var cmd = e.split(terminalConfig.TIPS);
+    	var n = cmd.length-count;
+    	e = '';
+    	return cmd[n];
+	}
+
+	//控制台textarea回车捕获事件
+	$("#cmd").keydown(function(event) {
+        if (event.keyCode === 13) {
+        	var all = getTerminalAllContent(this);
+        	appendNewLineInTerminal(all,this);
+        	var scrollTop = $("#cmd")[0].scrollHeight;  
+            $("#cmd").scrollTop(scrollTop);  
+        	handleCommands(getCMD(this));
+        	all = '';
+        	return false;
+        }
+	});
+
+	//控制台textarea按下退格键时判断前4个字符是否为'$_> ',如果是则阻止删除
+	$('#cmd').keydown(function(event){
+		if (event.keyCode === 8) {
+			var cmd = getCMD(this,1);
+			if(cmd === ''){
+				return false;
+			}
+		}
+	});
+
+	//控制台命令处理函数
+	var handleCommands = function(cmd) {
+		var func = eval(terminalCommands.cmd);
+		console.log(cmd);
+		if(cmd != 'clear') {
+			console.log('ddd');
+			console.log($('#cmd'));
+			new func (cmd,$('#cmd'));	
+		}else{
+			new func (cmd);
+		}
+		
+	};
+
 	//空格抬起事件,显示命令行控制台
 	var fnKeyup = function(event) {
-		if (event.keyCode === 32) {
-			closeTerminal();
+		if (event.keyCode === 32 && event.ctrlKey && event.altKey) {
+			toggleTerminal(); 	
 		}
 	}
 
