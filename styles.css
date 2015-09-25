@@ -1,0 +1,238 @@
+*{
+	transition:all 0.6s ease 0s;	
+}
+
+html{
+	box-sizing: border-box;
+	height: 100%;
+}
+
+body{
+	box-sizing: border-box;
+	background: #57585A none repeat scroll 0% 0%;
+	height: 100%;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	margin-top: -16px;
+}
+
+.container{
+	height: 100%;
+}
+
+header{
+	color: rgb(255,255,255);
+	text-shadow: -1px 0px 4px #222;
+	font-size: 0.8em;
+	font-weight: 200;
+	letter-spacing: 1px;
+	margin: 0;
+	padding: 16px;
+}
+
+header h1{
+	box-sizing:border-box;
+	font-weight: 200;
+	flex: 1 1 0%;
+}
+
+header #copyright{
+	width: 100%;
+	text-align: right;
+	margin-top: -40px;
+	font-size: 1.1em;
+}
+
+header #copyright a{
+	color: rgb(217,217,217);
+	text-decoration: none;
+}
+
+#main-menu{
+	color: rgb(128,128,128);
+	background: rgb(52,52,54);
+}
+
+#main-menu ul{
+	margin: 0px;
+	padding: 0px;
+	list-style: outside none none;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	color: #808080;
+	background-color: #343436;
+	font-size: 14px;
+	line-height: 1em;
+	border-style: solid;
+	border-color: #2C2C2E;
+	-moz-border-top-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	border-image: none;
+	border-width: 1px 0px;
+}
+
+#main-menu ul li{
+	padding: 6px 10px;
+	background: rgb(64,64,64);
+	border-right: 1px solid rgb(42,44,51);
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+	font-size: 1.1em;
+}
+
+#main-menu ul li:hover{
+	background: rgb(102,102,106);
+	color: rgb(255,255,255);
+}
+
+#main-section{
+	height: 100%;
+}
+
+#main-menu ul li.main-menu-title{
+	text-align: center;
+	background: rgb(52,52,54)!important;
+	cursor: default;
+	flex: 1 1 0%;
+}
+
+#mongo-list{
+	font-size: 12px;
+    color: #808080;
+    -moz-user-select: none;
+    position: relative;
+    z-index: 200;
+    flex: 0 1 0%;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+#mongo-table-list{
+	box-sizing: border-box;
+	border: 1px solid transparent;
+	transition: padding-bottom 0.05s ease-in 0s;
+	background: rgb(24,25,29); none repeat scroll 0% 0%;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0%;
+	color: rgb(255,255,255);
+}
+
+.flex-row{
+	display: flex;
+	display: -webkit-flex;
+	flex-direction: row;
+	-webkit-flex-direction: row;
+}
+
+.flex-row.full{
+	height: 100%;
+}
+
+.file-list {
+    margin: 0px;
+    padding: 0px;
+    overflow: auto;
+    list-style: outside none none;
+    line-height: 15px;
+    background-color: #141519;
+    color: #888;
+    flex: 1 1 0%;
+    border-right: 6px solid rgb(87,88,90);
+}
+
+.file-list ul{
+	list-style: none;
+	display: inherit;
+	margin-left: -40px;
+}
+
+.file-list ul li{
+	padding-top: 8px;
+	padding-bottom: 8px;
+	cursor: pointer;
+	padding-left: 15px;
+}
+
+.file-list ul li:hover{
+	color: rgb(255,255,255);
+}
+
+.file-list ul li.active{
+	background: rgb(0,79,106);
+	color: rgb(255,255,255);
+}
+
+/*mongoBro命令行控制台*/
+
+.mongo-terminal{
+	opacity: 0.8;
+	position: fixed;
+	z-index: 65535;
+	height: 400px;
+	width: 800px;
+	top: 30px;
+	left: 30px;
+	background: rgb(0,0,0);
+	border: 1px solid rgb(20,21,25);
+	box-shadow: 1px 1px 1px rgba(20,21,25, 0.2);
+}
+
+.terminal-top{
+	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	background: rgb(255,255,255);
+	/*padding: 8px;*/
+	/*text-align: center;*/
+	cursor: default;
+	font-size: 0.8em;
+}
+
+.terminal-control-btn{
+	width: 100%;
+	float: right;
+	text-align: right;
+	margin-top: -42px;
+	height: 100%;
+}
+
+.terminal-control-btn ul{
+	list-style: none;
+	margin-left: -40px;
+	padding-top:15px;
+	padding-bottom: 8px;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+
+.terminal-control-btn ul li{
+	display: inline;
+	cursor: pointer;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 100%;
+	padding: 9px;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin: 0px;
+	margin-left: -4px;
+}
+
+.terminal-control-btn ul li:hover{
+	background: rgb(229,229,229);
+}
+
+.terminal-control-btn ul li:last-child:hover{
+	color: rgb(255,255,255);
+	background: rgb(232,17,35);
+}
+
+.terminal-title{
+	width: 200px;
+	padding: 9px;
+}
