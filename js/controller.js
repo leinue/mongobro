@@ -58,17 +58,17 @@ $(function() {
 
 		//为控制台窗口添加新行
 		appendNewLineInTerminal : function(e,obj,displayTips) {
-			console.log(e+'\r\n'+terminalConfig.TIPS);
 			displayTips = displayTips == null ? true : false;
+			
 			if(displayTips) {
 				var TIPS = terminalConfig.TIPS;
 			}else{
 				var TIPS = '';
 			}
-			$(obj).val(e + '\r\n'+TIPS);
-			var scrollTop = $("#"+terminalConfig.EDITORID)[0].scrollHeight;  
+
+			$(obj).val(e + '\r\n' + TIPS);
+			var scrollTop = $("#" + terminalConfig.EDITORID)[0].scrollHeight;
             $("#"+terminalConfig.EDITORID).scrollTop(scrollTop);
-            return false;
 		},
 
 		cmd : function (func,obj,args) { //根据函数名执行函数
