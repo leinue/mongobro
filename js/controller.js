@@ -66,10 +66,12 @@ $(function() {
 				var TIPS = '';
 			}
 			$(obj).val(e + '\r\n'+TIPS);
+			var scrollTop = $("#"+terminalConfig.EDITORID)[0].scrollHeight;  
+            $("#"+terminalConfig.EDITORID).scrollTop(scrollTop);
 		},
 
 		cmd : function (func,obj,args) { //根据函数名执行函数
-			if(func.length!==1){
+			if(func.length!==0){
 				var objCalled = eval('terminalCommands.'+func);
 
 				//清空命令行中的空白字符
@@ -97,7 +99,9 @@ $(function() {
 		help : function (obj,args) { //输出帮助信息
 			var all = terminalCommands.getTerminalAllContent(obj);
 			all = all +'\r\n       this the help file';
-			console.log(args);
+			for (var i = 0; i < args.length; i++) {
+				all += '\n       '+ args[i] + ' : ' + terminalCommands[args[i]];
+			};
 			terminalCommands.appendNewLineInTerminal(all,obj);
 		}
 
@@ -258,8 +262,6 @@ $(function() {
         if (event.keyCode === 13) {
         	var all = terminalCommands.getTerminalAllContent(this);
         	terminalCommands.appendNewLineInTerminal(all,this);
-        	var scrollTop = $("#"+terminalConfig.EDITORID)[0].scrollHeight;  
-            $("#"+terminalConfig.EDITORID).scrollTop(scrollTop);  
         	handleCommands(getCMD(this));
         	all = '';
         	return false;
@@ -283,6 +285,8 @@ $(function() {
 		var cmdSplit = cmd.split(' ');
 		var funcName = cmdSplit[0];
 		var args = cmdSplit.shift();
+
+		funcName = funcName.replace('\n','');
 
 		if(funcName == 'h'){
 			funcName = 'help';//因为命令行依赖的函数不能出现一个字符的情况,所以当输入为h时自动转换为help

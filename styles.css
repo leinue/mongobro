@@ -5,6 +5,7 @@
 html{
 	box-sizing: border-box;
 	height: 100%;
+	
 }
 
 body{
@@ -15,6 +16,24 @@ body{
 	margin: 0px;
 	padding: 0px;
 	margin-top: -16px;
+}
+
+/* Track */ 
+::-webkit-scrollbar-track { 
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+	-webkit-border-radius: 10px; border-radius: 10px; 
+} 
+
+/* Handle */ 
+::-webkit-scrollbar-thumb { 
+	-webkit-border-radius: 10px; 
+	border-radius: 10px; 
+	background: rgba(255,0,0,0.8); 
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+} 
+
+::-webkit-scrollbar-thumb:window-inactive { 
+	background: rgba(255,0,0,0.4); 
 }
 
 .container{
@@ -116,7 +135,7 @@ header #copyright a{
 	box-sizing: border-box;
 	border: 1px solid transparent;
 	transition: padding-bottom 0.05s ease-in 0s;
-	background: rgb(24,25,29); none repeat scroll 0% 0%;
+	background: rgb(24,25,29) none repeat scroll 0% 0%;
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -180,18 +199,22 @@ header #copyright a{
 	top: 30px;
 	left: 30px;
 	background: rgb(0,0,0);
-	border: 1px solid rgb(20,21,25);
-	box-shadow: 1px 1px 1px rgba(20,21,25, 0.2);
+	/*border: 1px solid rgb(24,105,169);*/
+	/*box-shadow: 1px 1px 1px rgba(20,21,25, 0.2);*/
 }
 
 .mongo-terminal textarea {
-	width: 100%;
-	height: 100%;
+	width: 99.5%;
+	height: 90%;
 	background: rgb(0,0,0);
 	border: none;
 	color: rgb(255,255,255);
 	font-family: 'Lato','Aria';
 	font-size: 0.8em;
+	border: 1px solid rgb(24,105,169);
+	border-top: none;
+	margin-top: -1px;
+	overflow-y:hidden;
 }
 
 .terminal-top{
@@ -199,6 +222,7 @@ header #copyright a{
 	background: rgb(255,255,255);
 	cursor: default;
 	font-size: 0.8em;
+	border: 1px solid rgb(24,105,169);
 }
 
 .terminal-control-btn{
