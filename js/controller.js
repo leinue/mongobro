@@ -30,7 +30,6 @@ $(function() {
 		EOI : '\r\n' //换行符
 	};
 
-
 	//拓展string对象
 	String.prototype.trim=function(){
 　　    return this.replace(/(^\s*)|(\s*$)/g, "");
@@ -59,6 +58,7 @@ $(function() {
 
 		//为控制台窗口添加新行
 		appendNewLineInTerminal : function(e,obj,displayTips) {
+			console.log(e+'\r\n'+terminalConfig.TIPS);
 			displayTips = displayTips == null ? true : false;
 			if(displayTips) {
 				var TIPS = terminalConfig.TIPS;
@@ -68,6 +68,7 @@ $(function() {
 			$(obj).val(e + '\r\n'+TIPS);
 			var scrollTop = $("#"+terminalConfig.EDITORID)[0].scrollHeight;  
             $("#"+terminalConfig.EDITORID).scrollTop(scrollTop);
+            return false;
 		},
 
 		cmd : function (func,obj,args) { //根据函数名执行函数
@@ -108,6 +109,21 @@ $(function() {
 	};
 
 	//***************************UI控制层***************************
+
+	//模态框
+
+	var modal = {
+
+		show : function() {
+			console.log('dsdssdsd');
+			$('.md-modal').addClass('md-show');
+		},
+
+		input : function() {
+
+		}
+
+	};
 
 	$('.file-list ul li').click(function() {
 
@@ -254,6 +270,7 @@ $(function() {
     	var cmd = e.split(terminalConfig.TIPS);
     	var n = cmd.length-count;
     	e = '';
+    	cmd[n] = cmd[n].replace('\n','');
     	return cmd[n];
 	}
 
@@ -312,16 +329,27 @@ $(function() {
 		document.attachEvent("onkeyup",fnKeyup);
 	}
 
+	//新建数据库按钮被按下
+	$('#main-menu ul li#new-db').click(function(){
+		modal.show();
+	});
+
+	//新建数据库表按钮被按下
+	$('#main-menu ul li#new-table').click(function(){
+
+	});
+
 	//***************************业务逻辑控制层***************************
 
 	//左边数据库列表被点击时触发
 	function FileListClickOnStart(obj) {
 
+		
 	}
 
 	//左边数据库列表被点击完毕时触发
 	function FileListClickOnEnd(obj) {
-
+		
 	}
 
 });
