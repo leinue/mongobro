@@ -173,19 +173,70 @@ header #copyright a{
 }
 
 .file-list ul li{
+	cursor: pointer;
+	width: 100%;
+}
+
+.file-list ul li div{
+	width: 100%;
 	padding-top: 8px;
 	padding-bottom: 8px;
-	cursor: pointer;
 	padding-left: 15px;
+}
+
+.file-list ul li a{
+	text-decoration: none;
+	color: #888;
 }
 
 .file-list ul li:hover{
 	color: rgb(255,255,255);
 }
 
-.file-list ul li.active{
+.file-list ul li.active div{
 	background: rgb(0,79,106);
 	color: rgb(255,255,255);
+	width: 100%;
+	text-decoration: none;
+}
+
+.file-list ul li.active a{
+	color: rgb(255,255,255);
+}
+
+.file-list ul li ul{
+	display: none;
+	/*margin-left: -40px;*/
+}
+
+.file-list ul li.active ul{
+	margin-top: 10px;
+	background: rgb(20,21,25)!important;
+	display: block;
+	margin-top: 0px;
+	color: rgb(0,0,0);
+}
+
+.file-list ul li.active ul li{
+	padding-left: 15px;
+}
+
+.file-list ul li.active ul li div{
+	background: rgb(20,21,25);
+	color: #888;
+	padding-left: 15px;
+}
+
+.file-list ul li.active ul li.sactive{
+	background: rgb(10,50,66);
+	color: rgb(255,255,255);
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.file-list ul li.active ul li.sactive div{
+	margin: 0px;
+	background: rgb(10,50,66);
 }
 
 /*mongoBro命令行控制台*/
@@ -295,7 +346,7 @@ header #copyright a{
 .cd-popup-container {
   position: relative;
   width: 90%;
-  max-width: 800px;
+  max-width: 400px;
   margin: 4em auto;
   background: #FFF;
   border-radius: .25em .25em .4em .4em;
