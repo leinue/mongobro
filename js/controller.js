@@ -59,7 +59,7 @@ $(function() {
 		//为控制台窗口添加新行
 		appendNewLineInTerminal : function(e,obj,displayTips) {
 			displayTips = displayTips == null ? true : false;
-			
+
 			if(displayTips) {
 				var TIPS = terminalConfig.TIPS;
 			}else{
@@ -99,7 +99,7 @@ $(function() {
 
 		help : function (obj,args) { //输出帮助信息
 			var all = terminalCommands.getTerminalAllContent(obj);
-			all = all +'\r\n       this the help file';
+			all = all + '\r\n       this the help file';
 			for (var i = 0; i < args.length; i++) {
 				all += '\n       '+ args[i] + ' : ' + terminalCommands[args[i]];
 			};
@@ -114,16 +114,40 @@ $(function() {
 
 	var modal = {
 
-		show : function() {
-			console.log('dsdssdsd');
-			$('.md-modal').addClass('md-show');
-		},
-
-		input : function() {
-
+		show : function(id) {
+			$('#' + id).addClass('is-visible');
 		}
 
 	};
+
+	//点击空白处时触发
+	$('.cd-popup').on('click', function(event){
+	    if( $(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup') ) {
+	      event.preventDefault();
+	      $(this).removeClass('is-visible');
+	    }
+	});
+
+	//确定按钮被按下
+	$('.cd-buttons li:first-child a').click(function(){
+		$('.cd-popup').removeClass('is-visible');
+		var callback = $(this).attr('data-callback');
+		if(typeof callback == 'undefined') {
+			return false;
+		}
+		var callfunc = eval(callback);
+	});
+
+	//取消按钮被按下
+	$('.cd-buttons li:last-child a').click(function(){
+		$('.cd-popup').removeClass('is-visible');
+		var callback = $(this).attr('data-callback');
+		if(typeof callback == 'undefined') {
+			return false;
+		}
+		var callfunc = eval(callback);
+	});
+
 
 	$('.file-list ul li').click(function() {
 
@@ -331,12 +355,24 @@ $(function() {
 
 	//新建数据库按钮被按下
 	$('#main-menu ul li#new-db').click(function(){
-		modal.show();
+		modal.show('input-newdb');
 	});
+
+	//新建数据库确定按钮回调函数
+	var createNewDB = function(id) {
+		var dbname = $('#' + id).val();
+
+		if(dbname == null){
+			return false;
+		}
+
+		
+
+	}
 
 	//新建数据库表按钮被按下
 	$('#main-menu ul li#new-table').click(function(){
-
+		modal.show('input');
 	});
 
 	//***************************业务逻辑控制层***************************

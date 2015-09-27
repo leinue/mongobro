@@ -68,21 +68,22 @@
 
 	</div>
 
-	<div class="md-modal scale-up" id="modal-1">
-			<div class="md-content">
-				<h3>Modal Dialog</h3>
-				<div>
-					<p>This is a modal window. You can do the following things with it:</p>
-					<ul>
-						<li><strong>Read:</strong> modal windows will probably tell you something important so don't forget to read what they say.</li>
-						<li><strong>Look:</strong> a modal window enjoys a certain kind of attention; just look at it and appreciate its presence.</li>
-						<li><strong>Close:</strong> click on the button below to close the modal.</li>
-					</ul>
-					<button class="md-close">Close me!</button>
-				</div>
-			</div>
+	<div class="cd-popup" id="input-newdb" role="alert">
+	  <div class="cd-popup-container">
+	  	<div class="modal-header">
+	  		<h3>Create a new database</h3>
+	  	</div>
+		<div class="modal-body">
+			<input id="new-dbname" type="text" placeholder="please input a db name" />
 		</div>
-	
+	    <ul class="cd-buttons">
+	      <li><a data-callback="createNewDB('new-dbname')" href="#0">确定</a></li>
+	      <li><a data-callback="" href="#0">取消</a></li>
+	    </ul>
+	    <a href="#0" class="cd-popup-close img-replace"></a>
+	  </div>
+	</div>
+
 	<script type="text/javascript" src="js/mongobro.js"></script>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/controller.js"></script>
