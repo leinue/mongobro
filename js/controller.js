@@ -148,10 +148,10 @@ $(function() {
 		var callfunc = eval(callback);
 	});
 
-
-	$('.file-list ul li').click(function() {
-
-		///装饰器模式
+	//左边数据库列表被点击
+	$(document).on("click",".file-list ul li",function(){
+	    
+	    ///装饰器模式
 
 		FileListClickOnStart(this);
 		$('.file-list ul').find('.active').removeClass('active');
@@ -258,6 +258,7 @@ $(function() {
         this.setCapture && this.setCapture();
         return false;
     });
+
     document.onmousemove = function(e) {
         if (dragging) {
 	        var e = e || window.event;
@@ -272,6 +273,7 @@ $(function() {
 	        return false;
         }
     };
+
     $(document).mouseup(function(e) {
         dragging = false;
         dragIsFirst = true;
@@ -340,7 +342,7 @@ $(function() {
 		
 	};
 
-	//空格抬起事件,显示命令行控制台
+	//快捷键CTRL+ALT+SAPCE,显示命令行控制台
 	var fnKeyup = function(event) {
 		if (event.keyCode === 32 && event.ctrlKey && event.altKey) {
 			toggleTerminal(); 	
@@ -358,6 +360,65 @@ $(function() {
 		modal.show('input-newdb');
 	});
 
+	//新建数据库表按钮被按下
+	$('#main-menu ul li#new-table').click(function(){
+
+		var currentDB = $('.file-list ul').find('li.active');
+		var dbname = '';
+
+		if(currentDB.length === 0){
+			alert('请至少选择一个数据库');	
+		}
+
+		dbname = currentDB.html();
+
+		console.log(dbname);
+
+		modal.show('input-netable');
+	});
+
+	//数据库列表append
+
+	var appendDBList = function(obj) {
+
+		$('.file-list ul').html('');
+		for (var i = obj.length - 1; i >= 0; i--) {
+			$('.file-list ul').append('<li>'+obj[i]+'</li>');
+		};
+
+	};
+
+	var changeCurrentDBName = function(name) {
+		$('#main-menu ul li.main-menu-title').html(name);
+	}
+
+	//***************************业务逻辑控制层***************************
+
+	//读取已有数据库
+
+	var getDBExists = function() {
+		var allDB = mongoBro.getDatabases();
+		// appendDBList(allDB);
+	};
+
+	getDBExists();
+
+	//左边数据库列表被点击时触发
+	function FileListClickOnStart(obj) {
+
+	}
+
+	//左边数据库列表被点击完毕时触发
+	function FileListClickOnEnd(obj) {
+
+		var dbname = $(obj).html();
+
+		changeCurrentDBName(dbname);
+
+		var tableList = mongoBro.getTableByDBName(dbname);
+
+	}
+
 	//新建数据库确定按钮回调函数
 	var createNewDB = function(id) {
 		var dbname = $('#' + id).val();
@@ -366,26 +427,11 @@ $(function() {
 			return false;
 		}
 
-		
+		mongoBro.createDB(dbname);
 
-	}
+		getDBExists();
 
-	//新建数据库表按钮被按下
-	$('#main-menu ul li#new-table').click(function(){
-		modal.show('input');
-	});
+	};
 
-	//***************************业务逻辑控制层***************************
-
-	//左边数据库列表被点击时触发
-	function FileListClickOnStart(obj) {
-
-		
-	}
-
-	//左边数据库列表被点击完毕时触发
-	function FileListClickOnEnd(obj) {
-		
-	}
 
 });

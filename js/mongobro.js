@@ -387,37 +387,35 @@
 
 })(window);
 
-mongoBro.removeAllDatabases();
+// mongoBro.removeAllDatabases();
 
-console.log(mongoBro.createDB('test').getDatabases());
+// console.log(mongoBro.createDB('test').getDatabases());
 
-console.log(mongoBro.createDB('fuck').getDatabases());
+// console.log(mongoBro.createDB('fuck').getDatabases());
 
-console.log(mongoBro.updateDB('fuck','bitch').getDatabases());
+// console.log(mongoBro.updateDB('fuck','bitch').getDatabases());
 
-console.log(mongoBro.getCurrentDBName());
+// console.log(mongoBro.getCurrentDBName());
 
-console.log(mongoBro.removeDB('bitch').getDatabases());
+// console.log(mongoBro.removeDB('bitch').getDatabases());
 
-console.log(mongoBro.use('test').getCurrentDBName());
+// console.log(mongoBro.use('test').getCurrentDBName());
 
-console.log(mongoBro.createTable('test','person').getTable('person'));
+// console.log(mongoBro.createTable('test','person').getTable('person'));
 
-console.log(mongoBro.getTableList());
+// console.log(mongoBro.getTableList());
 
-console.log(mongoBro.createTable('test','xieyang',{
-	name : 'xieyang',
-	sex : 'male' 
-}).getTable('xieyang'));
+// console.log(mongoBro.createTable('test','xieyang',{
+// 	name : 'xieyang',
+// 	sex : 'male' 
+// }).getTable('xieyang'));
 	
-var tableInTest = mongoBro.getTableByDBName('test');
+// var tableInTest = mongoBro.getTableByDBName('test');
 
-console.log(tableInTest);
+// console.log(tableInTest);
 
-console.log('输出test数据库中的表数据');
+// console.log('输出test数据库中的表数据');
 
-for (var i = 0; i < tableInTest.length; i++) {
-	console.log(mongoBro.getTable(tableInTest[i]));
-};
-
-
+// for (var i = 0; i < tableInTest.length; i++) {
+// 	console.log(mongoBro.getTable(tableInTest[i]));
+// };
