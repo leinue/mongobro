@@ -382,8 +382,22 @@ $(function() {
 	var appendDBList = function(obj) {
 
 		$('.file-list ul').html('');
+
+		var second = '<ul>';
 		for (var i = obj.length - 1; i >= 0; i--) {
-			$('.file-list ul').append('<li>'+obj[i]+'</li>');
+			var tableList = mongoBro.getTableByDBName(obj[i]);
+
+			if (tableList.length !== 0) {
+				for (var j = tableList.length - 1; j >= 0; j--) {
+					var tableName = mongoBro.getTable(tableList[j]);
+					second += '<li data-dbname="'+tableName['dbname']+'" data-tableName="'+tableName['tableName']+'"><div>'+tableName['tableName']+'</div></li>';
+				};
+			}
+			
+			second = second === '<ul>' ? '' : second + '</ul>';
+			console.log('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
+			$('.file-list ul').append('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
+			second = '<ul>';
 		};
 
 	};
@@ -398,7 +412,7 @@ $(function() {
 
 	var getDBExists = function() {
 		var allDB = mongoBro.getDatabases();
-		// appendDBList(allDB);
+		appendDBList(allDB);
 	};
 
 	getDBExists();
@@ -411,7 +425,7 @@ $(function() {
 	//左边数据库列表被点击完毕时触发
 	function FileListClickOnEnd(obj) {
 
-		var dbname = $(obj).html();
+		var dbname = $(obj).attr('data-dbname');
 
 		changeCurrentDBName(dbname);
 
