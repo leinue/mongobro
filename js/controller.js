@@ -153,10 +153,27 @@ $(function() {
 	    
 	    ///装饰器模式
 
+	    var _this = $(this);
+
 		FileListClickOnStart(this);
+
 		$('.file-list ul').find('.active').removeClass('active');
-		$(this).addClass('active');
+		_this.toggleClass('active');
+
 		FileListClickOnEnd(this);
+
+	});
+
+	$(document).on('click','.file-list ul li.active ul li',function(){
+		
+		var _this = $(this);
+
+		tableListClickOnStart(this);
+
+		_this.parent().find('.sactive').removeClass('sactive');
+		_this.addClass('sactive');
+
+		tableListClickOnEnd(this);
 
 	});
 
@@ -383,7 +400,7 @@ $(function() {
 
 		$('.file-list ul').html('');
 
-		var second = '<ul>';
+		var second = '<ul class="second">';
 		for (var i = obj.length - 1; i >= 0; i--) {
 			var tableList = mongoBro.getTableByDBName(obj[i]);
 
@@ -394,10 +411,10 @@ $(function() {
 				};
 			}
 			
-			second = second === '<ul>' ? '' : second + '</ul>';
+			second = second === '<ul class="second">' ? '' : second + '</ul>';
 			console.log('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
 			$('.file-list ul').append('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
-			second = '<ul>';
+			second = '<ul class="second">';
 		};
 
 	};
@@ -430,6 +447,20 @@ $(function() {
 		changeCurrentDBName(dbname);
 
 		var tableList = mongoBro.getTableByDBName(dbname);
+
+	}
+
+	//数据表被点击开始
+	function tableListClickOnStart(obj) {
+
+	}
+
+	//数据表被点击结束
+	function tableListClickOnEnd(obj) {
+
+		var _this = $(obj);
+
+		var thisName = _this.find('div').html();
 
 	}
 
