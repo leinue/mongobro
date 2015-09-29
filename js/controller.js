@@ -406,7 +406,7 @@ $(function() {
 
 			if (tableList.length !== 0) {
 				for (var j = tableList.length - 1; j >= 0; j--) {
-					var tableName = mongoBro.getTable(tableList[j]);
+					var tableName = mongoBro.getTableCollection(tableList[j]);
 					second += '<li data-dbname="'+tableName['dbname']+'" data-tableName="'+tableName['tableName']+'"><div>'+tableName['tableName']+'</div></li>';
 				};
 			}
@@ -421,7 +421,11 @@ $(function() {
 
 	var changeCurrentDBName = function(name) {
 		$('#main-menu ul li.main-menu-title').html(name);
-	}
+	};
+
+	var changeCurrentTableName = function(name) {
+		$('#main-menu ul li.main-menu-title').append(name);
+	};
 
 	//***************************业务逻辑控制层***************************
 
@@ -461,6 +465,39 @@ $(function() {
 		var _this = $(obj);
 
 		var thisName = _this.find('div').html();
+
+		changeCurrentTableName(thisName);
+
+		var currentDataObj = mongoBro.getTableCollection(thisName);
+
+		var currentData = currentDataObj.data;
+
+		var collectionKeyList = mongoBro.getTableKey(currentData);
+
+		var theadHTML = '<tr><th>#</th>';
+
+		console.log(collectionKeyList);
+
+		for (var i = 0; i <= collectionKeyList.length - 1; i++) {
+			var key = collectionKeyList[i];
+
+			theadHTML += '<th>' + key + '</th>';			
+		};
+
+		theadHTML += '</tr>';
+
+		$('#collectionList thead').html(theadHTML);
+
+		var tbodyHTML = '<tr><td></td>';
+
+		for(var name in currentData.data) {
+			var val = currentData.data[name];
+			tbodyHTML += '<td>'+val+'</td>';
+		}
+
+		tbodyHTML += '</tr>';
+
+		$('#collectionList tbody').html(tbodyHTML);
 
 	}
 

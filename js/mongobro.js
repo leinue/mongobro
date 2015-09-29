@@ -379,8 +379,17 @@
 
 	}
 
-	mongoBro.prototype.getTable = function(tableName) {
+	mongoBro.prototype.getTableCollection = function(tableName) {
 		return JSON.parse(localStorage[tableName]);
+	}
+
+	mongoBro.prototype.getTableKey = function(tableCollection) {
+		var collectionList = [];
+		for(var name in tableCollection.data) {
+			collectionList.push(name);
+		}
+		
+		return collectionList;
 	}
 
 	window.mongoBro = new mongoBro();

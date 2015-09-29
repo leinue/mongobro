@@ -164,6 +164,7 @@ header #copyright a{
     color: #888;
     flex: 1 1 0%;
     border-right: 6px solid rgb(87,88,90);
+    overflow-x:hidden;
 }
 
 .file-list ul{
@@ -492,4 +493,68 @@ input {
 	box-shadow: none;
 	text-overflow: ellipsis;
 	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+table{
+	color: #808080;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	font-size: 0.9em;
+	border: 1px solid rgb(44,44,46);
+	table-layout:fixed;
+	empty-cells:show;
+	border-collapse: collapse;
+	margin-left: -1px;
+	margin-top:  -2px;
+	width: 100%;
+}
+
+table tr:hover {
+	background: rgb(26,32,43);
+}
+
+table tr:nth-child(even){
+	background: rgba(26,32,43,0.6);
+}
+
+td{
+	height:30px;
+}
+
+.table{
+	border:1px solid rgb(44,44,46);
+	color:#666;
+}
+
+.table th {
+	background-repeat:repeat-x;
+	height:30px;
+	text-align: left;
+	background: rgb(26,32,43);
+	color: rgb(200,200,200);
+}
+
+.table td,.table th {
+	border:1px solid rgb(44,44,46);
+	padding:0 1em 0;
+}
+
+.table td:first-child,.table th:first-child {
+	width: 1px;
+	background: rgb(24,25,29);
+}
+
+.table th:first-child:hover {
+	background: rgb(26,32,43);
+}
+
+.table tr.alter {
+	background-color:#f5fafe;
+}
+
+table thead tr th {
+	border-right: 1px solid rgb(44,44,46);
+}
+
+table thead tr th:first-child {
+	padding-left: 8px;
 }
