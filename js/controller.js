@@ -611,15 +611,17 @@ $(function() {
 
 		var tbodyHTML = '<tr><td></td>';
 
-		for(var name in currentData.data) {
-			var val = currentData.data[name];
-			tbodyHTML += '<td>'+val+'</td>';
+		if(typeof currentData != 'undefined') {
+			for(var name in currentData.data) {
+				var val = currentData.data[name];
+				tbodyHTML += '<td>'+val+'</td>';
+			}
+
+			tbodyHTML += '</tr>';
+
+			$('#collectionList tbody').html(tbodyHTML);
 		}
-
-		tbodyHTML += '</tr>';
-
-		$('#collectionList tbody').html(tbodyHTML);
-
+		
 	}
 
 	//数据库列表右键菜单被单击时的回调函数

@@ -201,9 +201,9 @@
 
 	}
 
-	mongoBro.prototype.removeTableList = function(tableName) {
+	mongoBro.prototype.removeTableList = function(dbname,tableName) {
 
-		var tableNameId = this.isTableExists(tableName);
+		var tableNameId = this.isTableExists(dbname,tableName);
 
 		if(tableNameId === false) {
 			return false;
@@ -227,13 +227,13 @@
 		return this;
 	}
 
-	mongoBro.prototype.updateTableList = function(oldName,newName) {
+	mongoBro.prototype.updateTableList = function(dbname,oldName,newName) {
 		
 		if(oldName === null || oldName === '' || newName === null || newName === ''){
 			return false;
 		}
 
-		var tableNameId = this.isTableExists(oldName);
+		var tableNameId = this.isTableExists(dbname,oldName);
 
 		if(tableNameId === false) {
 			return false;
@@ -241,9 +241,11 @@
 
 		var tableList = this.getTableList();
 
-		tableList[tableNameId] = newName;
-		
+		tableList[tableNameId].tableName = newName;
+
 		this.writeMongoTableDB(tableList);
+
+		console.log(this.getTableList());
 
 		return this;
 	}
@@ -314,7 +316,7 @@
 		return this;
 	}
 
-	mongoBro.prototype.isTableExists = function(tableName) {
+	mongoBro.prototype.isTableExists = function(dbname,tableName) {
 		
 		var tableList = this.getTableList();
 
@@ -322,8 +324,11 @@
 			return false;
 		}
 
+		console.log(tableList);
+
 		for (var i = 0; i < tableList.length; i++) {
-			if(tableList[i] === tableName) {
+			console.log(tableList[i].tableName)
+			if(tableList[i].tableName === tableName) {
 				return i;
 			}
 		};
@@ -332,12 +337,14 @@
 
 	}
 
-	mongoBro.prototype.updateTable = function(oldName,newName) {
+	mongoBro.prototype.updateTable = function(dbname,oldName,newName) {
 
-		var res = this.updateTableList(oldName,newName);
+		var res = this.updateTableList(dbname,oldName,newName);
 
 		if(res !== false) {
-			localStorage[newName] = localStorage[oldName];
+			var currentTableObj = JSON.parse(localStorage[oldName]);
+			currentTableObj.tableName = newName;
+			localStorage[newName] = JSON.stringify(currentTableObj);
 			localStorage[oldName] = '';
 		}
 
@@ -345,9 +352,9 @@
 
 	}
 
-	mongoBro.prototype.removeTable = function(tableName) {
+	mongoBro.prototype.removeTable = function(dbname,tableName) {
 
-		var tableNameId = this.isTableExists(tableName);
+		var tableNameId = this.isTableExists(dbname,tableName);
 
 		if(tableNameId === false) {
 			return false;
@@ -380,16 +387,24 @@
 	}
 
 	mongoBro.prototype.getTableCollection = function(tableName) {
-		return JSON.parse(localStorage[tableName]);
+		if( typeof localStorage[tableName] != 'undefined') {
+			return JSON.parse(localStorage[tableName]);
+		}
+		return false;
 	}
 
 	mongoBro.prototype.getTableKey = function(tableCollection) {
 		var collectionList = [];
-		for(var name in tableCollection.data) {
-			collectionList.push(name);
+		if(typeof tableCollection != 'undefined') {
+			for(var name in tableCollection.data) {
+				collectionList.push(name);
+			}
+
+			return collectionList;
 		}
+
+		return false;
 		
-		return collectionList;
 	}
 
 	window.mongoBro = new mongoBro();
@@ -410,14 +425,14 @@
 
 // console.log(mongoBro.use('test').getCurrentDBName());
 
-// console.log(mongoBro.createTable('test','person').getTable('person'));
+// console.log(mongoBro.createTable('test','person').getTableCollection('person'));
 
-// console.log(mongoBro.getTableList());
+console.log(mongoBro.getTableList());
 
 // console.log(mongoBro.createTable('test','xieyang',{
 // 	name : 'xieyang',
 // 	sex : 'male' 
-// }).getTable('xieyang'));
+// }).getTableCollection('xieyang'));
 	
 // var tableInTest = mongoBro.getTableByDBName('test');
 
@@ -426,5 +441,9 @@
 // console.log('输出test数据库中的表数据');
 
 // for (var i = 0; i < tableInTest.length; i++) {
-// 	console.log(mongoBro.getTable(tableInTest[i]));
+// 	console.log(mongoBro.getTableCollection(tableInTest[i]));
 // };
+
+// console.log('修改person表的名称');
+
+// console.log(mongoBro.updateTable('person','person_edit2'));
