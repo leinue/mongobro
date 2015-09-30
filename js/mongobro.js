@@ -420,41 +420,50 @@
 
 })(window);
 
-mongoBro.removeAllDatabases();
+var rollback = function(remove) {
 
-console.log(mongoBro.createDB('test').getDatabases());
+	remove = remove == null ? false : remove;
 
-console.log(mongoBro.createDB('fuck').getDatabases());
+	mongoBro.removeAllDatabases();
 
-console.log(mongoBro.updateDB('fuck','bitch').getDatabases());
+	console.log(mongoBro.createDB('test').getDatabases());
 
-console.log(mongoBro.getCurrentDBName());
+	console.log(mongoBro.createDB('fuck').getDatabases());
 
-console.log(mongoBro.removeDB('bitch').getDatabases());
+	console.log(mongoBro.updateDB('fuck','bitch').getDatabases());
 
-console.log(mongoBro.use('test').getCurrentDBName());
+	console.log(mongoBro.getCurrentDBName());
 
-console.log(mongoBro.createTable('test','person').getTableCollection('person'));
+	console.log(mongoBro.removeDB('bitch').getDatabases());
 
-console.log(mongoBro.getTableList());
+	console.log(mongoBro.use('test').getCurrentDBName());
 
-console.log(mongoBro.createTable('test','xieyang',{
-	name : 'xieyang',
-	sex : 'male' 
-}).getTableCollection('xieyang'));
-	
-var tableInTest = mongoBro.getTableByDBName('test');
+	console.log(mongoBro.createTable('test','person').getTableCollection('person'));
 
-console.log(tableInTest);
+	console.log(mongoBro.getTableList());
 
-console.log('输出test数据库中的表数据');
+	console.log(mongoBro.createTable('test','xieyang',{
+		name : 'xieyang',
+		sex : 'male' 
+	}).getTableCollection('xieyang'));
+		
+	var tableInTest = mongoBro.getTableByDBName('test');
 
-for (var i = 0; i < tableInTest.length; i++) {
-	console.log(mongoBro.getTableCollection(tableInTest[i]));
-};
+	console.log(tableInTest);
 
-console.log('修改person表的名称');
+	console.log('输出test数据库中的表数据');
 
-console.log(mongoBro.updateTable('test','person','person_edit2').getTableList());
+	for (var i = 0; i < tableInTest.length; i++) {
+		console.log(mongoBro.getTableCollection(tableInTest[i]));
+	};
 
-console.log(mongoBro.removeTable('test','person_edit2').getTableList());
+	console.log('修改person表的名称');
+
+	console.log(mongoBro.updateTable('test','person','person_edit2').getTableList());
+
+	if(remove) {
+		console.log(mongoBro.removeTable('test','person_edit2').getTableList());
+	}
+
+}
+

@@ -148,6 +148,25 @@ $(function() {
 			var tips = config.DEBUG ? '\r\n       DEBUG开关已打开' : '\r\n       DEBUG开关已关闭';
 			var all = terminalCommands.getTerminalAllContent(obj);
 			terminalCommands.appendNewLineInTerminal(all + tips, obj);
+		},
+
+		remove : function (obj,args) {
+			var method = {
+				'all' : function() {
+					mongoBro.removeAllDatabases();
+					getDBExists();
+				}
+			};
+
+			var type = '';
+
+			if(args.length === 0) {
+				type = 'all';
+			}else{
+				type = args[0];
+			}
+
+			method[type]();
 		}
 
 	};
@@ -520,11 +539,13 @@ $(function() {
 
 	var appendDBList = function(obj) {
 
-		$('.file-list ul').html('');
+		$('.file-list ul.first').html('');
 
-		var second = '<ul class="second">';
-		for (var i = 0; i <= obj.length - 1; i++) {
+		for (var i = 0; i <= obj.length-1; i++) {
 			var tableList = mongoBro.getTableByDBName(obj[i]);
+			var second = '<ul class="second">';
+
+			console.log(tableList);
 
 			if (tableList.length !== 0) {
 				for (var j = tableList.length - 1; j >= 0; j--) {
@@ -532,10 +553,10 @@ $(function() {
 					second += '<li data-dbname="'+tableName['dbname']+'" data-tableName="'+tableName['tableName']+'"><div>'+tableName['tableName']+'</div></li>';
 				};
 			}
-			
+
 			second = second === '<ul class="second">' ? '' : second + '</ul>';
-			$('.file-list ul').append('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
-			second = '<ul class="second">';
+			console.log('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
+			$('.file-list ul.first').append('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
 		};
 
 	};
