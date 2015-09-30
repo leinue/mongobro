@@ -5,7 +5,13 @@ $(function() {
 	var _document = $(document);
 
 	var config = {
-		DEBUG : true //是否为DEBUG状态
+		DEBUG : true, //是否为DEBUG状态
+		LEFT_CLICK : 1, //左键单击
+		RIGHT_CLICK : 2, //右键单击
+		DB_LIST : {
+			FIRST_LEVEL : 1, //dblist 第一层
+			SECOND_LEVEL : 2 //sblist 第二层
+		}
 	};
 
 	//用于输出数据的函数,仅当DEBUG状态为真时触发
@@ -36,6 +42,14 @@ $(function() {
 		currentTableName : '', //现行左键单击的数据表名称
 		currentRightClickDBName : '', //现行右键单击的数据库名称
 		currentRightClickTableName : '' //现行右键单击的数据表名称
+	};
+
+	//记录运行时产生的数据参数
+	var runtime = {
+		dbList : {
+			ClickMethod : config.LEFT_CLICK, //数据库/数据表点击方式(1:左击,2:右击)
+			ClickLevel : config.DB_LIST.FIRST_LEVEL //记录单击或右击的level层,1为第一层,2为第二层
+		}
 	};
 
 	//拓展string对象
@@ -138,6 +152,15 @@ $(function() {
 
 	};
 
+	//****************************基本库****************************
+
+	//数据库是否点击了二级菜单
+	function isDBListClick2ndLevel() {
+		console.log(runtime.dbList.ClickLevel);
+		return runtime.dbList.ClickLevel === config.DB_LIST.SECOND_LEVEL;
+	}
+
+
 	//***************************UI控制层***************************
 
 	//模态框
@@ -183,6 +206,8 @@ $(function() {
 	    
 	    ///装饰器模式
 
+	    runtime.dbList.ClickMethod = config.LEFT_CLICK; //当前是单击模式
+
 	    var _this = $(this);
 
 		FileListClickOnStart(this);
@@ -206,6 +231,7 @@ $(function() {
 	//左边列表被右击
 	$(document).on('mousedown','.file-list ul li',function(e){
 		if(e.which == 3) {
+			runtime.dbList.ClickMethod = config.RIGHT_CLICK; //当前是右击模式
 			var _this = $(this);
 			var _thisDBName = _this.attr('data-dbname');
 			var _thisTableName = _this.attr('data-tableName');
@@ -215,18 +241,30 @@ $(function() {
 				//点击了一级菜单
 				displayRightMenu(left,top);
 				dbConfig.currentRightClickDBName = _thisDBName;
+				runtime.dbList.ClickLevel = config.DB_LIST.FIRST_LEVEL; //右击第一层
 			}else {
 				//点击了二级菜单
 				displayRightMenu(left,top);
 				dbConfig.currentRightClickDBName = _thisDBName;
 				dbConfig.currentRightClickTableName = _thisTableName;
+				runtime.dbList.ClickLevel = config.DB_LIST.SECOND_LEVEL; //右击第二层
 			}
+			console.log(runtime.dbList.ClickLevel);
+			return false;
 		}
 	}).bind('contextmenu',function(e){
 	    e.preventDefault();
 	    return false;
 	});;
 
+
+	//数据库/数据表列表右键菜单被单击
+	$('#dblist-rm ul li').click(function(){
+
+		dbListRightMenuClickStart(this);
+
+		$('#dblist-rm').hide();
+	});
 
 	$(document).on('click','.file-list ul li.active ul li',function(){
 		
@@ -479,7 +517,6 @@ $(function() {
 			}
 			
 			second = second === '<ul class="second">' ? '' : second + '</ul>';
-			console.log('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
 			$('.file-list ul').append('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
 			second = '<ul class="second">';
 		};
@@ -566,6 +603,35 @@ $(function() {
 
 		$('#collectionList tbody').html(tbodyHTML);
 
+	}
+
+	//数据库列表右键菜单被单击时的回调函数
+	function dbListRightMenuClickStart(obj) {
+		var _this = $(obj);
+		var type = _this.attr('id');
+		var method = {
+			'dblist-rename' : function() {
+				var curerntDBName = dbConfig.currentRightClickDBName;
+
+				//如果是点击了二级菜单,则读取现行表名称
+				if(isDBListClick2ndLevel()) {
+					var currentTableName = dbConfig.currentRightClickTableName;
+					console.log(currentTableName);
+				}
+				
+			},
+			'dblist-delete' : function() {
+				var curerntDBName = dbConfig.currentRightClickDBName;
+
+				//如果是点击了二级菜单,则读取现行表名称
+				if(isDBListClick2ndLevel()) {
+					var currentTableName = dbConfig.currentRightClickTableName;
+				}
+
+			}
+		};
+		console.log(type);
+		method[type]();
 	}
 
 	//新建数据库确定按钮回调函数
