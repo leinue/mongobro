@@ -5,7 +5,7 @@ $(function() {
 	var _document = $(document);
 
 	var config = {
-		DEBUG : false //是否为DEBUG状态
+		DEBUG : true //是否为DEBUG状态
 	};
 
 	//用于输出数据的函数,仅当DEBUG状态为真时触发
@@ -123,7 +123,7 @@ $(function() {
 				}
 			};
 
-			if(args.length === 0) {
+			if(args.length === 0 || args[0] == 'toggle') {
 				config.DEBUG = ! config.DEBUG;
 			}else {
 				debugSwitch[args[0]]();
@@ -200,9 +200,16 @@ $(function() {
 			var _thisTableName = _this.attr('data-tableName');
 			if( typeof _thisTableName == 'undefined' ) {
 				//点击了一级菜单
+				var _rightMenu = $('.right-menu');
+				_rightMenu.show();
+				_rightMenu.css({
+					'top': e.clientX,
+					'left': e.clientY
+				});
 			}else {
 				//点击了二级菜单
 			}
+
 			return false;
 		}
 	});
@@ -219,6 +226,10 @@ $(function() {
 
 		tableListClickOnEnd(this);
 
+	});
+
+	$(document).on('click','body',function(){
+		$('.right-menu').hide();
 	});
 
 	//禁用右键菜单	
