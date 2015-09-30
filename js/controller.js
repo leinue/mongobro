@@ -5,7 +5,7 @@ $(function() {
 	var _document = $(document);
 
 	var config = {
-		DEBUG : true //是否为DEBUG状态
+		DEBUG : false //是否为DEBUG状态
 	};
 
 	//用于输出数据的函数,仅当DEBUG状态为真时触发
@@ -28,6 +28,12 @@ $(function() {
 		TIPS : '$_> ', //控制台输入提示符(用来作为用户输入命令的分割符)
 		EDITORID : 'cmd', //控制台编辑器的ID
 		EOI : '\r\n' //换行符
+	};
+
+	//数据库配置文件
+	var dbConfig = {
+		currentDBName : '',
+		currentTableName : ''
 	};
 
 	//拓展string对象
@@ -104,6 +110,28 @@ $(function() {
 				all += '\n       '+ args[i] + ' : ' + terminalCommands[args[i]];
 			};
 			terminalCommands.appendNewLineInTerminal(all,obj);
+		},
+
+		debug : function (obj,args) { //debug开关
+
+			var debugSwitch = {
+				'on' : function() {
+					config.DEBUG = true;
+				},
+				'off' : function() {
+					config.DEBUG = false;
+				}
+			};
+
+			if(args.length === 0) {
+				config.DEBUG = ! config.DEBUG;
+			}else {
+				debugSwitch[args[0]]();
+			}
+			
+			var tips = config.DEBUG ? '\r\n       DEBUG开关已打开' : '\r\n       DEBUG开关已关闭';
+			var all = terminalCommands.getTerminalAllContent(obj);
+			terminalCommands.appendNewLineInTerminal(all + tips, obj);
 		}
 
 	};
@@ -163,6 +191,22 @@ $(function() {
 		FileListClickOnEnd(this);
 
 	});
+
+	//左边列表被右击
+	$(document).on('mousedown','.file-list ul li',function(e){
+		if(e.which == 3) {
+			var _this = $(this);
+			var _thisDBName = _this.attr('data-dbname');
+			var _thisTableName = _this.attr('data-tableName');
+			if( typeof _thisTableName == 'undefined' ) {
+				//点击了一级菜单
+			}else {
+				//点击了二级菜单
+			}
+			return false;
+		}
+	});
+
 
 	$(document).on('click','.file-list ul li.active ul li',function(){
 		
@@ -344,7 +388,7 @@ $(function() {
 
 		var cmdSplit = cmd.split(' ');
 		var funcName = cmdSplit[0];
-		var args = cmdSplit.shift();
+		var args = cmdSplit.shift();//数组中的第一个为主命令
 
 		funcName = funcName.replace('\n','');
 
@@ -359,10 +403,10 @@ $(function() {
 		
 	};
 
-	//快捷键CTRL+ALT+SAPCE,显示命令行控制台
+	//快捷键CTRL+ALT+SAPCE,显示/关闭命令行控制台
 	var fnKeyup = function(event) {
 		if (event.keyCode === 32 && event.ctrlKey && event.altKey) {
-			toggleTerminal(); 	
+			toggleTerminal();
 		}
 	}
 
@@ -385,13 +429,12 @@ $(function() {
 
 		if(currentDB.length === 0){
 			alert('请至少选择一个数据库');	
+			return false;
 		}
 
 		dbname = currentDB.html();
 
-		console.log(dbname);
-
-		modal.show('input-netable');
+		modal.show('input-newtable');
 	});
 
 	//数据库列表append
@@ -421,9 +464,11 @@ $(function() {
 
 	var changeCurrentDBName = function(name) {
 		$('#main-menu ul li.main-menu-title').html(name);
+		dbConfig.currentDBName = name;
 	};
 
 	var changeCurrentTableName = function(name) {
+		dbConfig.currentTableName = name;
 		$('#main-menu ul li.main-menu-title').append(name);
 	};
 
@@ -476,12 +521,10 @@ $(function() {
 
 		var theadHTML = '<tr><th>#</th>';
 
-		console.log(collectionKeyList);
-
 		for (var i = 0; i <= collectionKeyList.length - 1; i++) {
 			var key = collectionKeyList[i];
 
-			theadHTML += '<th>' + key + '</th>';			
+			theadHTML += '<th>' + key + '</th>';		
 		};
 
 		theadHTML += '</tr>';
@@ -513,6 +556,19 @@ $(function() {
 
 		getDBExists();
 
+	};
+
+	//新建数据表确定按钮互调函数
+	var createNewTable = function(id) {
+		var tableName = $('#' + id).val();
+
+		if(tableName == null) {
+			return false;
+		}
+
+		var currentDBName = dbConfig.currentDBName;
+		mongoBro.createTable(currentDBName,tableName,{});
+		getDBExists();
 	};
 
 
