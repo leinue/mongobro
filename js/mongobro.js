@@ -380,12 +380,13 @@
 
 		var result = [];
 
-		for (var i = 0; i < tableList.length; i++) {
-			if(typeof tableList[i] != 'undefined') {
-				var databaseName = tableList[i].database;
+		for (var key in tableList) {
+			if(typeof tableList[key] == 'object') {
+				var tableObj = tableList[key];
+				var databaseName = tableObj.database;
 
 				if(databaseName == dbname){
-					result.push(tableList[i].tableName);
+					result.push(tableObj.tableName);
 				}
 			}
 			

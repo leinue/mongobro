@@ -523,7 +523,7 @@ $(function() {
 		$('.file-list ul').html('');
 
 		var second = '<ul class="second">';
-		for (var i = obj.length - 1; i >= 0; i--) {
+		for (var i = 0; i <= obj.length - 1; i++) {
 			var tableList = mongoBro.getTableByDBName(obj[i]);
 
 			if (tableList.length !== 0) {
@@ -553,7 +553,6 @@ $(function() {
 	//***************************业务逻辑控制层***************************
 
 	//读取已有数据库
-
 	var getDBExists = function() {
 		var allDB = mongoBro.getDatabases();
 		appendDBList(allDB);
@@ -696,12 +695,14 @@ $(function() {
 		getDBExists();
 	};
 
+	//删除数据表
 	var removeTable = function() {
 
 		var currentTableName = dbConfig.currentRightClickTableName;
+		var currentDBName = dbConfig.currentRightClickDBName;
 
 		if(currentTableName != '') {
-			mongoBro.removeTable(currentTableName);
+			mongoBro.removeTable(currentDBName,currentTableName);
 		}
 
 		getDBExists();
@@ -717,7 +718,8 @@ $(function() {
 		}
 
 		var currentTableName = dbConfig.currentRightClickTableName;
-		mongoBro.updateTable(currentTableName, newtableName);
+		var currentDBName = dbConfig.currentRightClickDBName;
+		mongoBro.updateTable(currentDBName,currentTableName, newtableName);
 		getDBExists();
 
 	};
