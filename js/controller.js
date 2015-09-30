@@ -169,6 +169,23 @@ $(function() {
 
 		show : function(id) {
 			$('#' + id).addClass('is-visible');
+		},
+
+		alert : function(id,callback) {
+			var html = '<div class="cd-popup" id="'+id+'">\
+							<div class="cd-popup-container">\
+							  	<div class="modal-header">\
+							  		<h3>Are you sure to do that?</h3>\
+							  	</div>\
+							    <ul class="cd-buttons">\
+							      	<li><a data-callback="'+callback+'" href="#0">确定</a></li>\
+							      	<li><a data-callback="" href="#0">取消</a></li>\
+							    </ul>\
+							    <a href="#0" class="cd-popup-close img-replace"></a>\
+							 </div>\
+						</div>';
+			$('body').append(html);
+			
 		}
 
 	};
@@ -630,8 +647,11 @@ $(function() {
 				//如果是点击了二级菜单,则读取现行表名称
 				if(isDBListClick2ndLevel()) {
 					var currentTableName = dbConfig.currentRightClickTableName;
+					modal.show('delete-table');
+					return true;
 				}
 
+				modal.show('delete-db');
 			}
 		};
 		method[type]();
@@ -651,6 +671,16 @@ $(function() {
 
 	};
 
+	var removeDB = function() {
+		var currentDBName = dbConfig.currentRightClickDBName;
+
+		if(currentDBName != '') {
+			mongoBro.removeDB(currentDBName);
+		}
+
+		getDBExists();
+	}
+
 	//新建数据表确定按钮互调函数
 	var createNewTable = function(id) {
 		var tableName = $('#' + id).val();
@@ -663,6 +693,18 @@ $(function() {
 		mongoBro.createTable(currentDBName,tableName,{});
 		getDBExists();
 	};
+
+	var removeTable = function() {
+
+		var currentTableName = dbConfig.currentRightClickTableName;
+
+		if(currentTableName != '') {
+			mongoBro.removeTable(currentTableName);
+		}
+
+		getDBExists();
+
+	}
 
 	//修改表名称
 	var renameTable = function(id) {
