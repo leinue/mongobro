@@ -616,9 +616,13 @@ $(function() {
 				//如果是点击了二级菜单,则读取现行表名称
 				if(isDBListClick2ndLevel()) {
 					var currentTableName = dbConfig.currentRightClickTableName;
-					console.log(currentTableName);
+					modal.show('rename-table');
+					$('#rename-tablename').val(currentTableName);
+					return true;
 				}
 				
+				modal.show('rename-db');
+				$('#rename-dbname').val(curerntDBName);
 			},
 			'dblist-delete' : function() {
 				var curerntDBName = dbConfig.currentRightClickDBName;
@@ -630,7 +634,6 @@ $(function() {
 
 			}
 		};
-		console.log(type);
 		method[type]();
 	}
 
@@ -659,6 +662,34 @@ $(function() {
 		var currentDBName = dbConfig.currentDBName;
 		mongoBro.createTable(currentDBName,tableName,{});
 		getDBExists();
+	};
+
+	//修改表名称
+	var renameTable = function(id) {
+		var newtableName = $('#' + id).val();
+
+		if(newtableName == null) {
+			return false;
+		}
+
+		var currentTableName = dbConfig.currentRightClickTableName;
+		mongoBro.updateTable(currentTableName, newtableName);
+		getDBExists();
+
+	};
+
+	//修改数据库名称
+	var renameDatabase = function(id) {
+		var newDBName = $('#' + id).val();
+
+		if(newDBName == null) {
+			return false;
+		}
+
+		var currentDBName = dbConfig.currentRightClickDBName;
+		mongoBro.updateDB(currentDBName,newDBName);
+		getDBExists();
+
 	};
 
 

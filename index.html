@@ -125,6 +125,38 @@
 		 </div>
 	</div>
 
+	<div class="cd-popup" id="rename-table">
+		<div class="cd-popup-container">
+		  	<div class="modal-header">
+		  		<h3>Rename a table</h3>
+		  	</div>
+			<div class="modal-body">
+				<input id="rename-tablename" type="text" placeholder="please input the new table name" />
+			</div>
+		    <ul class="cd-buttons">
+		      	<li><a data-callback="renameTable('rename-tablename')" href="#0">确定</a></li>
+		      	<li><a data-callback="" href="#0">取消</a></li>
+		    </ul>
+		    <a href="#0" class="cd-popup-close img-replace"></a>
+		 </div>
+	</div>
+
+	<div class="cd-popup" id="rename-db">
+		<div class="cd-popup-container">
+		  	<div class="modal-header">
+		  		<h3>Rename a database</h3>
+		  	</div>
+			<div class="modal-body">
+				<input id="rename-dbname" type="text" placeholder="please input the new db name" />
+			</div>
+		    <ul class="cd-buttons">
+		      	<li><a data-callback="renameDatabase('rename-dbname')" href="#0">确定</a></li>
+		      	<li><a data-callback="" href="#0">取消</a></li>
+		    </ul>
+		    <a href="#0" class="cd-popup-close img-replace"></a>
+		 </div>
+	</div>
+
 	<div class="right-menu" id="dblist-rm">
 		<ul>
 			<li id="dblist-rename">Rename</li>
