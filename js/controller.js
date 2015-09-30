@@ -32,8 +32,10 @@ $(function() {
 
 	//数据库配置文件
 	var dbConfig = {
-		currentDBName : '',
-		currentTableName : ''
+		currentDBName : '', //现行左键单击的数据库名称
+		currentTableName : '', //现行左键单击的数据表名称
+		currentRightClickDBName : '', //现行右键单击的数据库名称
+		currentRightClickTableName : '' //现行右键单击的数据表名称
 	};
 
 	//拓展string对象
@@ -192,27 +194,38 @@ $(function() {
 
 	});
 
+	var displayRightMenu  = function(top,left) {
+		var _rightMenu = $('.right-menu');
+		_rightMenu.show();
+		_rightMenu.css({
+			'top': top,
+			'left': left
+		});
+	};
+
 	//左边列表被右击
 	$(document).on('mousedown','.file-list ul li',function(e){
 		if(e.which == 3) {
 			var _this = $(this);
 			var _thisDBName = _this.attr('data-dbname');
 			var _thisTableName = _this.attr('data-tableName');
+			var top = e.clientX;
+			var left = e.clientY;
 			if( typeof _thisTableName == 'undefined' ) {
 				//点击了一级菜单
-				var _rightMenu = $('.right-menu');
-				_rightMenu.show();
-				_rightMenu.css({
-					'top': e.clientX,
-					'left': e.clientY
-				});
+				displayRightMenu(left,top);
+				dbConfig.currentRightClickDBName = _thisDBName;
 			}else {
 				//点击了二级菜单
+				displayRightMenu(left,top);
+				dbConfig.currentRightClickDBName = _thisDBName;
+				dbConfig.currentRightClickTableName = _thisTableName;
 			}
-
-			return false;
 		}
-	});
+	}).bind('contextmenu',function(e){
+	    e.preventDefault();
+	    return false;
+	});;
 
 
 	$(document).on('click','.file-list ul li.active ul li',function(){
