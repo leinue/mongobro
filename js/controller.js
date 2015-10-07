@@ -1,6 +1,7 @@
 $(function() {
 
 	//项目基本配置
+	//2015-10-07 update
 
 	var _document = $(document);
 
@@ -150,7 +151,7 @@ $(function() {
 			terminalCommands.appendNewLineInTerminal(all + tips, obj);
 		},
 
-		remove : function (obj,args) {
+		remove : function (obj,args) { //清空数据库,如果参数留空则清空所有数据库
 			var method = {
 				'all' : function() {
 					mongoBro.removeAllDatabases();
