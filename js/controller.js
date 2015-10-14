@@ -180,7 +180,6 @@ $(function() {
 		return runtime.dbList.ClickLevel === config.DB_LIST.SECOND_LEVEL;
 	}
 
-
 	//***************************UI控制层***************************
 
 	//模态框
