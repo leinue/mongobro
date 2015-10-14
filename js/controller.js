@@ -572,14 +572,14 @@ $(function() {
 
 		var tableMethod = {
 
-			0: function() { //选择
-				$('#collectionList tbody tr').toggleClass('active');
+			0: function(obj) { //选择
+				$(obj).parent().toggleClass('active');
 			}
 
 		};
 
 		if(typeof tableMethod[tdIndex] != 'undefined') {
-			tableMethod[tdIndex]();
+			tableMethod[tdIndex](this);
 		}
 
 	});
