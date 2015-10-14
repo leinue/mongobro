@@ -307,7 +307,7 @@
 				dbname : dbname,
 				tableName : tableName,
 				data : {
-					data
+					0: {data}
 				}
 			}
 
@@ -402,6 +402,18 @@
 		return false;
 	}
 
+	mongoBro.prototype.removeTableCollection = function(dbname, tableName) {
+
+	}
+
+	mongoBro.prototype.updateTableCollection = function(dbname, tableName) {
+
+	}
+
+	mongoBro.prototype.insertTableCollection = function(dbname, tableName) {
+
+	}
+
 	mongoBro.prototype.getTableKey = function(tableCollection) {
 		var collectionList = [];
 		if(typeof tableCollection != 'undefined') {
@@ -467,3 +479,5 @@ var rollback = function(remove) {
 
 }
 
+
+rollback();

@@ -50,6 +50,10 @@ $(function() {
 		dbList : {
 			ClickMethod : config.LEFT_CLICK, //数据库/数据表点击方式(1:左击,2:右击)
 			ClickLevel : config.DB_LIST.FIRST_LEVEL //记录单击或右击的level层,1为第一层,2为第二层
+		},
+
+		collection : {
+			selected: [] //记录数据表中被选择的所有项目
 		}
 	};
 
@@ -568,8 +572,8 @@ $(function() {
 
 		var tableMethod = {
 
-			0: function() {
-				console.log('ddd');
+			0: function() { //选择
+				$('#collectionList tbody tr').toggleClass('active');
 			}
 
 		};
@@ -668,7 +672,7 @@ $(function() {
 
 		var currentDataObj = mongoBro.getTableCollection(thisName);
 
-		var currentData = currentDataObj.data;
+		var currentData = currentDataObj.data[0];
 
 		var collectionKeyList = mongoBro.getTableKey(currentData);
 

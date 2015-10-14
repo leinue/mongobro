@@ -602,3 +602,7 @@ table thead tr th:first-child {
 #main-menu ul li.menu-disabled {
 	background: rgb(52,52,54)!important;
 }
+
+#collectionList tbody tr.active {
+	background: rgb(26,32,43);
+}
