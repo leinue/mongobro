@@ -307,7 +307,7 @@
 				dbname : dbname,
 				tableName : tableName,
 				data : {
-					0: {data}
+					data
 				}
 			}
 
@@ -410,7 +410,7 @@
 
 	}
 
-	mongoBro.prototype.insertTableCollection = function(dbname, tableName) {
+	mongoBro.prototype.insertTableCollection = function(dbname, tableName, data) {
 
 	}
 
@@ -418,7 +418,19 @@
 		var collectionList = [];
 		if(typeof tableCollection != 'undefined') {
 			for(var name in tableCollection.data) {
-				collectionList.push(name);
+				console.log(tableCollection.data);
+				if(typeof tableCollection.data == 'object') {
+					for (var i = 0; i < tableCollection.data.length; i++) {
+						var currentTableCollection = tableCollection.data[i];
+						for(var key in currentTableCollection) {
+							collectionList.push(key);
+						}
+						break;
+					};
+					break;
+				}else {
+					collectionList.push(name);
+				}
 			}
 
 			return collectionList;
@@ -454,10 +466,14 @@ var rollback = function(remove) {
 
 	console.log(mongoBro.getTableList());
 
-	console.log(mongoBro.createTable('test','xieyang',{
+	console.log(mongoBro.createTable('test','xieyang',
+		[{
 		name : 'xieyang',
 		sex : 'male' 
-	}).getTableCollection('xieyang'));
+	},{
+		name: 'lanjia',
+		sex: 'male'
+	}]).getTableCollection('xieyang'));
 		
 	var tableInTest = mongoBro.getTableByDBName('test');
 
@@ -468,6 +484,12 @@ var rollback = function(remove) {
 	for (var i = 0; i < tableInTest.length; i++) {
 		console.log(mongoBro.getTableCollection(tableInTest[i]));
 	};
+
+	console.log('向test表中插入数据');
+
+	console.log('更新test表中主键为0的数据');
+
+	console.log('删除test表中主键为1的数据');
 
 	console.log('修改person表的名称');
 

@@ -672,7 +672,7 @@ $(function() {
 
 		var currentDataObj = mongoBro.getTableCollection(thisName);
 
-		var currentData = currentDataObj.data[0];
+		var currentData = currentDataObj.data;
 
 		var collectionKeyList = mongoBro.getTableKey(currentData);
 
@@ -693,12 +693,21 @@ $(function() {
 		if(typeof currentData != 'undefined') {
 			for(var name in currentData.data) {
 				var val = currentData.data[name];
-				tbodyHTML += '<td>'+val+'</td>';
+
+				if(typeof val == 'object') {
+					for(var key in val) {
+						tbodyHTML += '<td>' + val[key] + '</td>';
+					}
+					tbodyHTML += '</tr><tr><td></td>';
+				}else {
+					tbodyHTML += '<td>'+ val +'</td>';
+				}
 			}
 
 			tbodyHTML += '</tr>';
 
 			$('#collectionList tbody').html(tbodyHTML);
+			$('#collectionList tbody tr:last-child').remove();
 		}
 
 		//底部控制按钮可用
