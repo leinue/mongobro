@@ -180,6 +180,7 @@ $(function() {
 		return runtime.dbList.ClickLevel === config.DB_LIST.SECOND_LEVEL;
 	}
 
+
 	//***************************UI控制层***************************
 
 	//模态框
@@ -561,6 +562,56 @@ $(function() {
 
 	};
 
+	//表格项被点击
+	$(document).on('click', '#collectionList tbody tr td', function() {
+		var tdIndex = $(this).index();
+
+		var tableMethod = {
+
+			0: function() {
+				console.log('ddd');
+			}
+
+		};
+
+		if(typeof tableMethod[tdIndex] != 'undefined') {
+			tableMethod[tdIndex]();
+		}
+
+	});
+	// $('#collectionList tbody tr td').click(function() {
+	// 	console.log($(this));
+	// });
+
+	//底部数据表功能菜单被点击
+	$('.table-toolbar #main-menu ul li').click(function() {
+		var _this = $(this);
+
+		if(_this.hasClass('menu-disabled')) {
+			return false;
+		}
+
+		var tableName = getCurrentTableName();
+
+		var clickIndex = _this.index();
+
+		var clickMethod = {
+			0: function() {//新增
+
+			},
+
+			1: function() {//删除
+
+			},
+
+			2: function() {//刷新
+
+			}
+		}
+
+		clickMethod[clickIndex]();
+	});
+
 	var changeCurrentDBName = function(name) {
 		$('#main-menu ul li.main-menu-title').html(name);
 		dbConfig.currentDBName = name;
@@ -570,6 +621,10 @@ $(function() {
 		dbConfig.currentTableName = name;
 		$('#main-menu ul li.main-menu-title').append(name);
 	};
+
+	var getCurrentTableName = function() {
+		return dbConfig.currentTableName;
+	}
 
 	//***************************业务逻辑控制层***************************
 
@@ -641,6 +696,9 @@ $(function() {
 
 			$('#collectionList tbody').html(tbodyHTML);
 		}
+
+		//底部控制按钮可用
+		$('.table-toolbar #main-menu ul li').removeClass('menu-disabled');
 		
 	}
 

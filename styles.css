@@ -591,3 +591,14 @@ table thead tr th:first-child {
 	cursor: pointer;
 	color: rgb(211,211,211);
 }
+
+.table-toolbar {
+	color: #FFF;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+#main-menu ul li.menu-disabled {
+	background: rgb(52,52,54)!important;
+}
