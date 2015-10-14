@@ -412,6 +412,18 @@
 
 	mongoBro.prototype.insertTableCollection = function(dbname, tableName, data) {
 
+		if(dbname == null || tableName == null || data == null ) {
+			return false;
+		}
+
+		var dataExists = this.getTableCollection(tableName);
+		var realData = dataExists.data.data;
+		var dataCount = realData.length;
+
+		dataExists.data.data[dataCount] = data;
+ 		localStorage[tableName] = JSON.stringify(dataExists);
+
+		return this;
 	}
 
 	mongoBro.prototype.getTableKey = function(tableCollection) {
@@ -486,6 +498,11 @@ var rollback = function(remove) {
 	};
 
 	console.log('向test表中插入数据');
+
+	console.log(mongoBro.insertTableCollection('test', 'xieyang', {
+		name: 'hh',
+		sex: '233'
+	}));
 
 	console.log('更新test表中主键为0的数据');
 
