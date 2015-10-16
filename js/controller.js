@@ -54,7 +54,7 @@ $(function() {
 
 		collection : {
 			selected: [], //记录数据表中被选择的所有项目
-			isExists: function(_id) {
+			isExists: function(_id) { //检测被选择的项是否已存在于列表中,如果有则删除,没有则push
 				for (var i = 0; i < this.selected.length; i++) {
 					var curr = this.selected[i];
 					if(curr._id == _id) {
@@ -193,7 +193,6 @@ $(function() {
 		console.log(runtime.dbList.ClickLevel);
 		return runtime.dbList.ClickLevel === config.DB_LIST.SECOND_LEVEL;
 	}
-
 
 	//***************************UI控制层***************************
 
@@ -585,6 +584,8 @@ $(function() {
 			0: function(obj) { //选择
 				var _this = $(obj);
 				_this.parent().toggleClass('active');
+
+				//所有数据存储于data-val中
 				var val = JSON.parse(_this.next().attr('data-val'));
 				
 				if(!runtime.collection.isExists(val._id)) {
@@ -623,6 +624,14 @@ $(function() {
 			},
 
 			1: function() {//删除
+
+				var collectionSelected = runtime.collection.selected;
+
+				if(collectionSelected.length === 0) {
+					alert('请至少选择一项');
+				}
+
+				modal.show('delete-collection');
 
 			},
 
@@ -846,6 +855,11 @@ $(function() {
 		mongoBro.updateDB(currentDBName,newDBName);
 		getDBExists();
 
+	};
+
+	//删除数据记录
+	var removeCollection = function() {
+		runtime.collection.selected = [];
 	};
 
 
