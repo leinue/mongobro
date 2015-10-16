@@ -303,6 +303,11 @@
 		if(dbnameId === false){
 			return false;
 		}else{
+
+			for(var key in data) {
+				data[key]._id = parseInt(key);
+			}
+
 			var tableObj = {
 				dbname : dbname,
 				tableName : tableName,
@@ -402,11 +407,22 @@
 		return false;
 	}
 
-	mongoBro.prototype.removeTableCollection = function(dbname, tableName) {
+	mongoBro.prototype.removeTableCollection = function(dbname, tableName, id) {
+
+		if(dbname == null || tableName == null || id == null) {
+			return false;
+		}
+
+		var dataExists = this.getTableCollection(tableName);
+		var realData = dataExists.data.data;
+
+		dataExists.data.data.splice(id,1);
+
+		localStorage[tableName] = JSON.stringify(dataExists);
 
 	}
 
-	mongoBro.prototype.updateTableCollection = function(dbname, tableName) {
+	mongoBro.prototype.updateTableCollection = function(dbname, tableName, id) {
 
 	}
 
@@ -421,6 +437,7 @@
 		var dataCount = realData.length;
 
 		dataExists.data.data[dataCount] = data;
+		dataExists.data.data[dataCount]._id = dataCount;
  		localStorage[tableName] = JSON.stringify(dataExists);
 
 		return this;

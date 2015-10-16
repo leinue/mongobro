@@ -53,7 +53,17 @@ $(function() {
 		},
 
 		collection : {
-			selected: [] //记录数据表中被选择的所有项目
+			selected: [], //记录数据表中被选择的所有项目
+			isExists: function(_id) {
+				for (var i = 0; i < this.selected.length; i++) {
+					var curr = this.selected[i];
+					if(curr._id == _id) {
+						this.selected.splice(i,1);
+						return true;
+					}
+				};
+				return false;
+			}
 		}
 	};
 
@@ -573,7 +583,15 @@ $(function() {
 		var tableMethod = {
 
 			0: function(obj) { //选择
-				$(obj).parent().toggleClass('active');
+				var _this = $(obj);
+				_this.parent().toggleClass('active');
+				var val = JSON.parse(_this.next().attr('data-val'));
+				
+				if(!runtime.collection.isExists(val._id)) {
+					runtime.collection.selected.push(val);
+				}
+
+				console.log(runtime.collection.selected);
 			}
 
 		};
@@ -696,7 +714,7 @@ $(function() {
 
 				if(typeof val == 'object') {
 					for(var key in val) {
-						tbodyHTML += '<td>' + val[key] + '</td>';
+						tbodyHTML += '<td data-val=\''+JSON.stringify(val)+'\'>' + val[key] + '</td>';
 					}
 					tbodyHTML += '</tr><tr><td></td>';
 				}else {
