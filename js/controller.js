@@ -550,7 +550,6 @@ $(function() {
 	});
 
 	//数据库列表append
-
 	var appendDBList = function(obj) {
 
 		$('.file-list ul.first').html('');
@@ -574,6 +573,54 @@ $(function() {
 		};
 
 	};
+
+	//数据记录append
+	var appendCollection = function(thisName) {
+
+		var currentDataObj = mongoBro.getTableCollection(thisName);
+
+		var currentData = currentDataObj.data;
+
+		var collectionKeyList = mongoBro.getTableKey(currentData);
+
+		var theadHTML = '<tr><th>#</th>';
+
+		for (var i = 0; i <= collectionKeyList.length - 1; i++) {
+			var key = collectionKeyList[i];
+
+			theadHTML += '<th>' + key + '</th>';		
+		};
+
+		theadHTML += '</tr>';
+
+		$('#collectionList thead').html(theadHTML);
+
+		var tbodyHTML = '<tr><td></td>';
+
+		if(typeof currentData != 'undefined') {
+			for(var name in currentData.data) {
+				var val = currentData.data[name];
+
+				if(typeof val == 'object') {
+					for(var key in val) {
+						tbodyHTML += '<td data-val=\''+JSON.stringify(val)+'\'>' + val[key] + '</td>';
+					}
+					tbodyHTML += '</tr><tr><td></td>';
+				}else {
+					tbodyHTML += '<td>'+ val +'</td>';
+				}
+			}
+
+			tbodyHTML += '</tr>';
+
+			$('#collectionList tbody').html(tbodyHTML);
+			$('#collectionList tbody tr:last-child').remove();
+		}
+
+		//底部控制按钮可用
+		$('.table-toolbar #main-menu ul li').removeClass('menu-disabled');
+
+	}
 
 	//表格项被点击
 	$(document).on('click', '#collectionList tbody tr td', function() {
@@ -690,56 +737,14 @@ $(function() {
 
 	//数据表被点击结束
 	function tableListClickOnEnd(obj) {
-
+		
 		var _this = $(obj);
 
 		var thisName = _this.find('div').html();
 
 		changeCurrentTableName(thisName);
 
-		var currentDataObj = mongoBro.getTableCollection(thisName);
-
-		var currentData = currentDataObj.data;
-
-		var collectionKeyList = mongoBro.getTableKey(currentData);
-
-		var theadHTML = '<tr><th>#</th>';
-
-		for (var i = 0; i <= collectionKeyList.length - 1; i++) {
-			var key = collectionKeyList[i];
-
-			theadHTML += '<th>' + key + '</th>';		
-		};
-
-		theadHTML += '</tr>';
-
-		$('#collectionList thead').html(theadHTML);
-
-		var tbodyHTML = '<tr><td></td>';
-
-		if(typeof currentData != 'undefined') {
-			for(var name in currentData.data) {
-				var val = currentData.data[name];
-
-				if(typeof val == 'object') {
-					for(var key in val) {
-						tbodyHTML += '<td data-val=\''+JSON.stringify(val)+'\'>' + val[key] + '</td>';
-					}
-					tbodyHTML += '</tr><tr><td></td>';
-				}else {
-					tbodyHTML += '<td>'+ val +'</td>';
-				}
-			}
-
-			tbodyHTML += '</tr>';
-
-			$('#collectionList tbody').html(tbodyHTML);
-			$('#collectionList tbody tr:last-child').remove();
-		}
-
-		//底部控制按钮可用
-		$('.table-toolbar #main-menu ul li').removeClass('menu-disabled');
-		
+		appendCollection(thisName);
 	}
 
 	//数据库列表右键菜单被单击时的回调函数
@@ -859,7 +864,13 @@ $(function() {
 
 	//删除数据记录
 	var removeCollection = function() {
+		for (var i = 0; i < runtime.collection.selected.length; i++) {
+			var id = runtime.collection.selected[i]._id;
+			mongoBro.removeTableCollection(dbConfig.currentDBName,dbConfig.currentTableName,i);
+		};
+
 		runtime.collection.selected = [];
+		appendCollection(getCurrentTableName());
 	};
 
 
