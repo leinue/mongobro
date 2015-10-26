@@ -676,6 +676,7 @@ $(function() {
 
 				if(collectionSelected.length === 0) {
 					alert('请至少选择一项');
+					return false;
 				}
 
 				modal.show('delete-collection');
@@ -866,7 +867,7 @@ $(function() {
 	var removeCollection = function() {
 		for (var i = 0; i < runtime.collection.selected.length; i++) {
 			var id = runtime.collection.selected[i]._id;
-			mongoBro.removeTableCollection(dbConfig.currentDBName,dbConfig.currentTableName,i);
+			mongoBro.removeTableCollection(dbConfig.currentDBName,dbConfig.currentTableName,id);
 		};
 
 		runtime.collection.selected = [];

@@ -305,7 +305,7 @@
 		}else{
 
 			for(var key in data) {
-				data[key]._id = parseInt(key);
+				data[key]._id = parseInt(key) + 1;
 			}
 
 			var tableObj = {
@@ -416,7 +416,22 @@
 		var dataExists = this.getTableCollection(tableName);
 		var realData = dataExists.data.data;
 
-		dataExists.data.data.splice(id,1);
+		var realID = '';
+
+		for (var i = 0; i < realData.length; i++) {
+			var curr = realData[i];
+			console.log(curr);
+			if(curr._id === id) {
+				realID = i;
+				break;
+			}
+		};
+
+		if(realID === '') {
+			return false;
+		}
+
+		dataExists.data.data.splice(realID,1);
 
 		localStorage[tableName] = JSON.stringify(dataExists);
 
@@ -437,7 +452,7 @@
 		var dataCount = realData.length;
 
 		dataExists.data.data[dataCount] = data;
-		dataExists.data.data[dataCount]._id = dataCount;
+		dataExists.data.data[dataCount]._id = dataCount + 1;
  		localStorage[tableName] = JSON.stringify(dataExists);
 
 		return this;
