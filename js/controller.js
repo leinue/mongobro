@@ -108,6 +108,24 @@ $(function() {
             $("#"+terminalConfig.EDITORID).scrollTop(scrollTop);
 		},
 
+		getAllCmds: function() { //获得所有命令
+			var list = [];
+			for(var key in terminalCommands) {
+				list.push(key);
+			}
+			return list;
+		},
+
+		formatCmds: function() { //格式化命令显示方式
+			var tmp = '';
+			var cmdList = terminalCommands.getAllCmds();
+			for (var i = 0; i < cmdList.length; i++) {
+				var curr = cmdList[i];
+				tmp += '       ' + curr + '\r\n';
+			};
+			return tmp;
+		},
+
 		cmd : function (func,obj,args) { //根据函数名执行函数
 			if(func.length!==0){
 				var objCalled = eval('terminalCommands.'+func);
@@ -136,10 +154,13 @@ $(function() {
 
 		help : function (obj,args) { //输出帮助信息
 			var all = terminalCommands.getTerminalAllContent(obj);
-			all = all + '\r\n       this the help file';
-			for (var i = 0; i < args.length; i++) {
-				all += '\n       '+ args[i] + ' : ' + terminalCommands[args[i]];
-			};
+			if(args.length > 0) {
+				for (var i = 0; i < args.length; i++) {
+					all += '\n       '+ args[i] + ' : ' + terminalCommands[args[i]];
+				};
+			}else {
+				all = all + '\r\n\r\n       this the help tips, all commands available are listed below:(you can type help [command name] to lookup the prototype of the command that you want to learn,for example : help clear) \r\n' + terminalCommands.formatCmds();				
+			}
 			terminalCommands.appendNewLineInTerminal(all,obj);
 		},
 
