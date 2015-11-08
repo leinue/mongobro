@@ -317,7 +317,7 @@ $(function() {
 			var _thisDBName = _this.attr('data-dbname');
 			var _thisTableName = _this.attr('data-tableName');
 			var top = e.clientX;
-			var left = e.clientY;
+			var left = e.clientY + 100;
 			if( typeof _thisTableName == 'undefined' ) {
 				//点击了一级菜单
 				displayRightMenu(left,top);
@@ -360,8 +360,19 @@ $(function() {
 
 	});
 
-	$(document).on('click','body',function(){
+	//body被点击时隐藏右键菜单,数据列表编辑框等
+	$(document).on('click','body',function(e){
 		$('.right-menu').hide();
+
+		var clickArea = e.originalEvent.explicitOriginalTarget;
+		//每个列表项的上一级都有一个data-val,以此判断受否点击了列表项,如果点击了列表项,不允许隐藏列表项编辑框
+		if(typeof $(clickArea).parent().attr('data-val') == 'undefined') {
+			$('#collectionList tbody tr td input').each(function(i, e) {
+				var curr = $(e);
+				curr.parent().html(curr.val());
+			});
+		}
+
 	});
 
 	//禁用右键菜单	
@@ -645,6 +656,7 @@ $(function() {
 			tbodyHTML += '</tr>';
 
 			$('#collectionList tbody').html(tbodyHTML);
+			//优化DOM中存储数据的方式
 			$('#collectionList tbody tr').each(function(index, elem) {
 				var _this = $(elem);
 				var dataVal = _this.find('td:nth-child(2)');
