@@ -645,6 +645,18 @@ $(function() {
 			tbodyHTML += '</tr>';
 
 			$('#collectionList tbody').html(tbodyHTML);
+			$('#collectionList tbody tr').each(function(index, elem) {
+				var _this = $(elem);
+				var dataVal = _this.find('td:nth-child(2)');
+				if(typeof dataVal != 'undefined') {
+					_this.attr('data-val', dataVal.attr('data-val'));
+				}
+
+				_this.find('td').each(function(i, e) {
+					var curr = $(e);
+					curr.attr('data-val', '');	
+				});
+			});
 			$('#collectionList tbody tr:last-child').remove();
 		}
 
@@ -663,11 +675,11 @@ $(function() {
 				var _this = $(obj);
 				_this.parent().toggleClass('active');
 
-				if(typeof _this.next().attr('data-val') == 'undefined') {
+				if(typeof _this.parent().attr('data-val') == 'undefined') {
 					return false;
 				}
 				//所有数据存储于data-val中
-				var val = JSON.parse(_this.next().attr('data-val'));
+				var val = JSON.parse(_this.parent().attr('data-val'));
 				
 				if(!runtime.collection.isExists(val._id)) {
 					runtime.collection.selected.push(val);
@@ -698,9 +710,9 @@ $(function() {
 			var newValue = thisInput.val();
 			_this.html(newValue);
 		}
-		
 	});
 
+	//表格项文本框被按下CTRL+enter
 	$(document).on('keyup', '#collectionList tbody tr td input', function(e) {
 		if(e.keyCode == 13 && e.ctrlKey) {
 			var _this = $(this);			
