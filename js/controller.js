@@ -202,7 +202,17 @@ $(function() {
 				type = args[0];
 			}
 
-			method[type]();
+			if (typeof method[type] == 'function') {
+				method[type]();				
+			}else {
+				var tips = '\r\n       ' + type + 'is undefined';
+				var all = terminalCommands.getTerminalAllContent(obj);
+				terminalCommands.appendNewLineInTerminal(all + tips, obj);
+			}
+		},
+
+		exit: function(obj, args) {
+			toggleTerminal();
 		}
 
 	};
@@ -653,6 +663,9 @@ $(function() {
 				var _this = $(obj);
 				_this.parent().toggleClass('active');
 
+				if(typeof _this.next().attr('data-val') == 'undefined') {
+					return false;
+				}
 				//所有数据存储于data-val中
 				var val = JSON.parse(_this.next().attr('data-val'));
 				
@@ -670,9 +683,31 @@ $(function() {
 		}
 
 	});
-	// $('#collectionList tbody tr td').click(function() {
-	// 	console.log($(this));
-	// });
+	
+	//表格项被双击
+	$(document).on('dblclick', '#collectionList tbody tr td', function() {
+		var _this = $(this);
+		var thisValue = _this.html();
+
+		var thisInput = _this.find('input');
+
+		if(thisInput.length === 0) {
+			var tmpl = '<input type="text" value="'+ thisValue +'" />';
+			_this.html(tmpl);
+		}else {
+			var newValue = thisInput.val();
+			_this.html(newValue);
+		}
+		
+	});
+
+	$(document).on('keyup', '#collectionList tbody tr td input', function(e) {
+		if(e.keyCode == 13 && e.ctrlKey) {
+			var _this = $(this);			
+			var myValue = _this.val();
+			_this.parent().html(myValue);
+		}
+	});
 
 	//底部数据表功能菜单被点击
 	$('.table-toolbar #main-menu ul li').click(function() {
@@ -731,7 +766,9 @@ $(function() {
 	//读取已有数据库
 	var getDBExists = function() {
 		var allDB = mongoBro.getDatabases();
-		appendDBList(allDB);
+		if(allDB != null) {
+			appendDBList(allDB);
+		}
 	};
 
 	getDBExists();

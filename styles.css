@@ -536,6 +536,7 @@ td{
 .table td,.table th {
 	border:1px solid rgb(44,44,46);
 	padding:0 1em 0;
+	overflow: hidden;
 }
 
 .table td:first-child,.table th:first-child {

@@ -513,7 +513,7 @@ var rollback = function(remove) {
 	console.log(mongoBro.createTable('test','xieyang',
 		[{
 		name : 'xieyang',
-		sex : 'male' 
+		sex : 'malemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemalemale' 
 	},{
 		name: 'lanjia',
 		sex: 'male'
