@@ -365,10 +365,15 @@ $(function() {
 		$('.right-menu').hide();
 
 		var clickArea = e.originalEvent.explicitOriginalTarget;
+
 		//每个列表项的上一级都有一个data-val,以此判断受否点击了列表项,如果点击了列表项,不允许隐藏列表项编辑框
 		if(typeof $(clickArea).parent().attr('data-val') == 'undefined') {
 			$('#collectionList tbody tr td input').each(function(i, e) {
 				var curr = $(e);
+				//新建表格项的时候点击了body与此处冲突,因此需要检测当前td是否有td-new-collection类,如果有则不允许置空
+				if(curr.parent().hasClass('td-new-collection')) {
+					return false;
+				}
 				curr.parent().html(curr.val());
 			});
 		}
@@ -747,6 +752,16 @@ $(function() {
 
 		var clickMethod = {
 			0: function() {//新增
+
+				//append表格进编辑框供用户编辑
+
+				var tmpl = "<tr><td></td>";
+				tmpl += '<td class="td-new-collection"><input type="text"></td>';
+				tmpl += '<td class="td-new-collection"><input type="text"></td>';
+				tmpl += '<td class="td-new-collection"><input type="text"></td>';
+				tmpl += '</tr>';
+
+				$('#collectionList tbody').append(tmpl);
 
 			},
 
