@@ -502,6 +502,12 @@
 			return this;
 		}
 
+		if(collectionName == '_id') {
+			if(isNaN(value)) {
+				return false;
+			}
+		}
+
 		var dataExists = this.getTableCollection(tableName);
 		var realData = dataExists.data.data;
 		
@@ -604,10 +610,6 @@
 		};
 
 		return keyList;
-	}
-
-	mongoBro.prototype.addFiledsToCollection = function(dbname, filedsName, val) {
-
 	}
 
 	mongoBro.prototype.insertTableCollection = function(dbname, tableName, data) {

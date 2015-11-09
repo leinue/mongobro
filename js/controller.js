@@ -646,6 +646,8 @@ $(function() {
 
 		var tbodyHTML = '<tr><td></td>';
 
+		var primaryKeyList = [];
+
 		if(typeof currentData != 'undefined') {
 			for(var name in currentData.data) {
 				var val = currentData.data[name];
@@ -655,8 +657,12 @@ $(function() {
 					var count = 0;
 
 					for(var key in val) {
-						tbodyHTML += '<td data-val=\''+JSON.stringify(val)+'\'>' + val[key] + '</td>';
+						tbodyHTML += '<td data-collection-name="'+key+'" data-val=\''+JSON.stringify(val)+'\'>' + val[key] + '</td>';
 						count ++;
+						//保存所有的主键值,防止重复
+						if(key == '_id') {
+							primaryKeyList.push(val[key]);
+						}
 					}
 
 					if(count < collectionKeyListLength) {
@@ -678,6 +684,7 @@ $(function() {
 				var dataVal = _this.find('td:nth-child(2)');
 				if(typeof dataVal != 'undefined') {
 					_this.attr('data-val', dataVal.attr('data-val'));
+					_this.attr('data-main-key', JSON.stringify(primaryKeyList));
 				}
 
 				_this.find('td').each(function(i, e) {
@@ -740,12 +747,63 @@ $(function() {
 		}
 	});
 
+	//获得主键列表
+	var getThisPrimaryKey = function(obj) {
+
+		var thisPrimaryKey = obj.attr('data-main-key');
+
+		if(typeof thisPrimaryKey == 'undefined') {
+			thisPrimaryKey = {};
+		}else {
+			thisPrimaryKey = JSON.parse(thisPrimaryKey);
+		}
+
+		return thisPrimaryKey;
+	}
+
+	//获得集合名称
+	var getCollectionName = function(obj) {
+		return obj.attr('data-collection-name');
+	}
+
+	//获得当前被点击项目的所有集合
+	var getDataVal = function(obj) {
+		var thisJsonData = obj.attr('data-val');
+		if(typeof thisJsonData != 'undefined') {
+			var thisData = JSON.parse(thisJsonData);
+		}else {
+			var thisData = {};
+		}
+		return thisData;
+	}
+
 	//表格项文本框被按下CTRL+enter
 	$(document).on('keyup', '#collectionList tbody tr td input', function(e) {
 		if(e.keyCode == 13 && e.ctrlKey) {
-			var _this = $(this);			
+			var _this = $(this);
+			var thisParent = _this.parent();
+			var thisGrandparent = thisParent.parent();
+
+			var thisCollectionName = getCollectionName(thisParent);
+			var thisData = getDataVal(thisGrandparent);
+			var thisPrimaryKey = getThisPrimaryKey(thisGrandparent);
+
+			var id = thisData._id;
+			var collectionName = thisCollectionName;
 			var myValue = _this.val();
-			_this.parent().html(myValue);
+
+			var value = myValue;
+
+			if (saveTableCollection(id, collectionName, value, thisPrimaryKey)) {
+				//更新DOM
+
+				//更新DOM属性
+
+
+				//更新DOM可见内容
+				_this.parent().html(myValue);
+			}
+			
 		}
 	});
 
@@ -982,5 +1040,33 @@ $(function() {
 		appendCollection(getCurrentTableName());
 	};
 
+	//用户修改/增加字段保存到本地localStorage
+	var saveTableCollection = function(id, collectionName, value, thisPrimaryKey) {
+
+		if(collectionName == '_id') {
+			if(isNaN(value)) {
+				alert('请填写数值');
+				return false;
+			}
+		}
+
+		//去掉thisPrimaryKey中存在的当前值
+		thisPrimaryKey.splice(thisPrimaryKey.indexOf(parseInt(id)), 1);
+
+		if(thisPrimaryKey.indexOf(parseInt(value)) != -1) {
+			alert('主键不允许重复');
+			return false;
+		}
+
+		if(value < 0) {
+			alert('主键不允许小于0');
+			return false;
+		}
+
+		var dbname = dbConfig.currentDBName;
+		var tableName = getCurrentTableName();
+		return mongoBro.updateTableCollection(dbname, tableName, id, collectionName, value);
+
+	}
 
 });
