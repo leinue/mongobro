@@ -422,6 +422,47 @@
 		return false;
 	}
 
+	mongoBro.prototype.getTableCollectionBy = function(dbname, tableName, key, val, like) {
+
+		like = like == null ? false: true;
+
+		if(dbname == null || tableName == null || key == null) {
+			return false;
+		}
+
+		var collection = [];
+		var flag = 0;
+
+		var data = this.getTableCollection(tableName).data.data;
+		for (var i = 0; i < data.length; i++) {
+			var curr = data[i];
+			if(key == '_id') {
+				//主键要做特殊搜索
+				if(curr[key] == val) {
+					collection.push(curr);
+					flag ++;			
+				}
+			}else {
+				//字符串要做模糊查询,待定
+				if(like) {
+					//使用模糊查询
+				}else {
+					//不使用模糊查询
+				}
+			}
+		};
+
+		if(flag === 0 ) {
+			return false;
+		}
+
+		return collection;
+	}
+
+	mongoBro.prototype.getTableCollectionById = function(dbname, tableName, val) {
+		return this.getTableCollectionBy(dbname, tableName, '_id', val);
+	}
+
 	mongoBro.prototype.removeTableCollection = function(dbname, tableName, id) {
 
 		if(dbname == null || tableName == null || id == null) {
@@ -510,31 +551,45 @@
 			return false;
 		}
 
-		//如果没有对应字段则进行添加字段和值操作,如果有对应字段则做修改操作
+		var keyList = this.getObjKey(obj);
 
-		//获得集合对象的key
-		var getObjKey = function(o) {
-			if(typeof o != 'object') {
-				return false;
-			}
+		var dataExists = this.getTableCollection(tableName);
+		var realData = dataExists.data.data;
 
-			var keyList = [];
+		//查找对应id是否存在
+		var isCollectionExists = function(obj) {
+			return obj.getTableCollectionById(dbname, tableName, id);
+		}(this);
 
-			for (var key in o) {
-				keyList.push(key);
-			};
-
-			return keyList;
-
+		//如果没有对应字段则进行添加字段和值操作,如果有对应字段则做修改操作		
+		if(isCollectionExists) {
+			//存在该id
+			
+		}else {
+			//不存在该id,直接进行加入操作
+			// return this.insertTableCollection(dbname, tableName, obj);
 		}
 
-		console.log('============');
-		var keyList = getObjKey(obj);
-		console.log(keyList);
-		console.log('============');
+		var keyListEx = this.getObjKey(realData[0]);
+		console.log(keyListEx);
 
 		return this;
 
+	}
+
+	//获得集合对象的key
+	mongoBro.prototype.getObjKey = function(o) {
+		if(typeof o != 'object') {
+			return false;
+		}
+
+		var keyList = [];
+
+		for (var key in o) {
+			keyList.push(key);
+		};
+
+		return keyList;
 	}
 
 	mongoBro.prototype.addFiledsToCollection = function(dbname, filedsName, val) {
