@@ -561,17 +561,38 @@
 			return obj.getTableCollectionById(dbname, tableName, id);
 		}(this);
 
-		//如果没有对应字段则进行添加字段和值操作,如果有对应字段则做修改操作		
 		if(isCollectionExists) {
 			//存在该id
-			
+			var keyListEx = this.getObjKey(realData[0]);
+			keyListEx.pop();
+
+			var likeCount = 0;
+			var count = keyListEx.length;
+			for (var i = 0; i < keyList.length; i++) {
+				var curr = keyList[i];
+				if(keyListEx.indexOf(curr) != -1){
+					//如果有对应字段则直接做修改操作
+					likeCount ++;
+					for (var j = 0; j < realData.length; j++) {
+						var currData = realData[j];
+						console.log(obj);
+						if(currData._id === id) {
+							currData[curr] = obj[curr];
+						}
+					};
+				}else {
+					//如果没有对应字段则进行添加字段和值操作
+				}
+			};
+
+			console.log('==============');
+			console.log(realData);
+			console.log('==============');
+
 		}else {
 			//不存在该id,直接进行加入操作
-			// return this.insertTableCollection(dbname, tableName, obj);
+			return this.insertTableCollection(dbname, tableName, obj);
 		}
-
-		var keyListEx = this.getObjKey(realData[0]);
-		console.log(keyListEx);
 
 		return this;
 
