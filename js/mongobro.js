@@ -56,6 +56,15 @@
 		return mongoDB.MongoDBNameList;
 	}
 
+	/*
+	* 判断dbname是否存在
+	* @param dbname
+	* @return true | false;
+	**/
+	mongoBro.prototype.isDbExists = function(dbname) {
+		return this.isExists(dbname) === false ? false : true;
+	}
+
 	mongoBro.prototype.writeMongoObj = function(str) {
 		localStorage.MongoBrowserDB = JSON.stringify(str);
 		this.broadcastMongoDbUpdated();
@@ -103,6 +112,12 @@
 		}
 			
 	}
+
+	/*
+	* 判断数据库是否存在,如果存在返回下标,否则返回false
+	* @param string dbname;
+	* @return i | false;
+	*/
 
 	mongoBro.prototype.isExists = function(dbname) {
 		var databasesNameList = this.getMongoObj();
@@ -420,7 +435,6 @@
 
 		for (var i = 0; i < realData.length; i++) {
 			var curr = realData[i];
-			console.log(curr);
 			if(curr._id === id) {
 				realID = i;
 				break;
@@ -443,11 +457,15 @@
 			return false;
 		}
 
+		if(collectionName == null || value == null) {
+			return this;
+		}
+
 		var dataExists = this.getTableCollection(tableName);
 		var realData = dataExists.data.data;
 		
 		if(id === 0) {
-			id ++;//mongobro中主键从1开始			
+			id ++;//mongobro中主键从1开始
 		}
 
 		for (var i = 0; i < realData.length; i++) {
@@ -461,6 +479,65 @@
 		localStorage[tableName] = JSON.stringify(dataExists);
 
 		return this;
+
+	}
+
+	/*
+	* 通过对象方式更新集合
+	* @param string dbname, string tableName, int id, object obj
+	* @return false | this
+	**/
+
+	mongoBro.prototype.updateTCByObject = function(dbname, tableName, id, obj) {
+
+		if(tableName == null || dbname == null || id == null || obj == null) {
+			return false;
+		}
+
+		if(!this.isDbExists(dbname)) {
+			return false;
+		}
+
+		if(!this.isTableExists(dbname, tableName)) {
+			return false;
+		}
+
+		if(typeof obj != 'object') {
+			return false;
+		}
+
+		if(isNaN(id)) {
+			return false;
+		}
+
+		//如果没有对应字段则进行添加字段和值操作,如果有对应字段则做修改操作
+
+		//获得集合对象的key
+		var getObjKey = function(o) {
+			if(typeof o != 'object') {
+				return false;
+			}
+
+			var keyList = [];
+
+			for (var key in o) {
+				keyList.push(key);
+			};
+
+			return keyList;
+
+		}
+
+		console.log('============');
+		var keyList = getObjKey(obj);
+		console.log(keyList);
+		console.log('============');
+
+		return this;
+
+	}
+
+	mongoBro.prototype.addFiledsToCollection = function(dbname, filedsName, val) {
 
 	}
 
@@ -559,11 +636,20 @@ var rollback = function(remove) {
 		sex: '233'
 	}));
 
-	console.log('更新test表数据库名为xieyang中主键为0的name字段');
+	console.log('更新test表数据库名为xieyang中主键为1的name字段');
 
-	console.log(mongoBro.updateTableCollection('test', 'xieyang', 0, 'name', 'xuqianying').getTableList());
+	console.log(mongoBro.updateTableCollection('test', 'xieyang', 1, 'name', 'xuqianying').getTableList());
 
-	console.log('删除test表中主键为1的数据');
+	console.log('更新test表数据库名为xieyang中主键为2的name字段');
+
+	console.log(mongoBro.updateTableCollection('test', 'xieyang', 2, 'name', 'xieyang').getTableList());
+
+	console.log('以对象的方式修改test表中数据库名为xieyang中主键为2的集合');
+
+	console.log(mongoBro.updateTCByObject('test', 'xieyang', 1, {
+		name: '蛤蛤',
+		sex: 'LGBT'
+	}));
 
 	console.log('修改person表的名称');
 
