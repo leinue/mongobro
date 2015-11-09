@@ -570,25 +570,18 @@
 			var count = keyListEx.length;
 			for (var i = 0; i < keyList.length; i++) {
 				var curr = keyList[i];
-				if(keyListEx.indexOf(curr) != -1){
-					//如果有对应字段则直接做修改操作
-					likeCount ++;
-					for (var j = 0; j < realData.length; j++) {
-						var currData = realData[j];
-						console.log(obj);
-						if(currData._id === id) {
-							currData[curr] = obj[curr];
-						}
-					};
-				}else {
-					//如果没有对应字段则进行添加字段和值操作
-				}
+				likeCount ++;
+				//如果有对应字段则直接做修改操作
+				//如果没有对应字段则进行添加字段和值操作(添加部分直接向对象加入键)
+				for (var j = 0; j < realData.length; j++) {
+					var currData = realData[j];
+					if(currData._id === id) {
+						currData[curr] = obj[curr];
+					}
+				};
 			};
 
-			console.log('==============');
-			console.log(realData);
-			console.log('==============');
-
+			localStorage[tableName] = JSON.stringify(dataExists);
 		}else {
 			//不存在该id,直接进行加入操作
 			return this.insertTableCollection(dbname, tableName, obj);
@@ -724,7 +717,8 @@ var rollback = function(remove) {
 
 	console.log(mongoBro.updateTCByObject('test', 'xieyang', 1, {
 		name: '蛤蛤',
-		sex: 'LGBT'
+		sex: 'LGBT',
+		fuck: 'me'
 	}));
 
 	console.log('修改person表的名称');

@@ -630,6 +630,8 @@ $(function() {
 
 		var collectionKeyList = mongoBro.getTableKey(currentData);
 
+		var collectionKeyListLength = collectionKeyList.length;
+
 		var theadHTML = '<tr><th>#</th>';
 
 		for (var i = 0; i <= collectionKeyList.length - 1; i++) {
@@ -649,9 +651,18 @@ $(function() {
 				var val = currentData.data[name];
 
 				if(typeof val == 'object') {
+
+					var count = 0;
+
 					for(var key in val) {
 						tbodyHTML += '<td data-val=\''+JSON.stringify(val)+'\'>' + val[key] + '</td>';
+						count ++;
 					}
+
+					if(count < collectionKeyListLength) {
+						tbodyHTML += '<td>\</td>';
+					}
+
 					tbodyHTML += '</tr><tr><td></td>';
 				}else {
 					tbodyHTML += '<td>'+ val +'</td>';
