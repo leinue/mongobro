@@ -615,7 +615,7 @@ $(function() {
 			}
 
 			second = second === '<ul class="second">' ? '' : second + '</ul>';
-			console.log('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
+			// console.log('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
 			$('.file-list ul.first').append('<li data-dbname="'+obj[i]+'"><div>'+obj[i]+'</div>'+second+'</li>');
 		};
 

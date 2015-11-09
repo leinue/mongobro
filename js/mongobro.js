@@ -437,7 +437,30 @@
 
 	}
 
-	mongoBro.prototype.updateTableCollection = function(dbname, tableName, id) {
+	mongoBro.prototype.updateTableCollection = function(dbname, tableName, id, collectionName, value) {
+
+		if(dbname == null || tableName == null || id == null) {
+			return false;
+		}
+
+		var dataExists = this.getTableCollection(tableName);
+		var realData = dataExists.data.data;
+		
+		if(id === 0) {
+			id ++;//mongobro中主键从1开始			
+		}
+
+		for (var i = 0; i < realData.length; i++) {
+			var curr = realData[i];
+			if(curr._id == id) {
+				realData[i][collectionName] = value;
+				break;
+			}
+		};
+
+		localStorage[tableName] = JSON.stringify(dataExists);
+
+		return this;
 
 	}
 
@@ -536,7 +559,9 @@ var rollback = function(remove) {
 		sex: '233'
 	}));
 
-	console.log('更新test表中主键为0的数据');
+	console.log('更新test表数据库名为xieyang中主键为0的name字段');
+
+	console.log(mongoBro.updateTableCollection('test', 'xieyang', 0, 'name', 'xuqianying').getTableList());
 
 	console.log('删除test表中主键为1的数据');
 
