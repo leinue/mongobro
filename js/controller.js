@@ -368,7 +368,7 @@ $(function() {
 
 		//每个列表项的上一级都有一个data-val,以此判断受否点击了列表项,如果点击了列表项,不允许隐藏列表项编辑框
 		if(typeof $(clickArea).parent().attr('data-val') == 'undefined') {
-			$('#collectionList tbody tr td input').each(function(i, e) {
+			$('#collectionList tbody tr td input, #collectionList tbody tr td textarea').each(function(i, e) {
 				var curr = $(e);
 				//新建表格项的时候点击了body与此处冲突,因此需要检测当前td是否有td-new-collection类,如果有则不允许置空
 				if(curr.parent().hasClass('td-new-collection')) {
@@ -782,7 +782,7 @@ $(function() {
 			var index = obj.index() - 1;
 			return getCollectionNameListByThead(index);
 		}else {
-			return obj.attr('data-collection-name');			
+			return obj.attr('data-collection-name');
 		}
 	}
 
@@ -797,49 +797,67 @@ $(function() {
 		return thisData;
 	}
 
-	//表格项文本框被按下CTRL+enter
+	var executeCollectionSaving = function(obj) {
+		var _this = $(obj);
+		var thisParent = _this.parent();
+		var thisGrandparent = thisParent.parent();
+
+		var thisCollectionName = getCollectionName(thisParent);
+
+		var thisPrimaryKey = getThisPrimaryKey(thisGrandparent);
+		var dataMainKey = getThisPrimaryKey(thisGrandparent);
+
+		var thisData = getDataVal(thisGrandparent);
+		var originalId = thisData._id;
+		var id = thisData._id;
+
+		var myValue = _this.val();
+
+		if (saveTableCollection(id, thisCollectionName, myValue, thisPrimaryKey)) {
+			//更新DOM
+
+			//更新DOM属性
+			thisData[thisCollectionName] = myValue;
+			thisGrandparent.attr('data-val', JSON.stringify(thisData));
+
+			if(thisCollectionName == '_id') {
+				thisGrandparent.parent().find('tr').each(function(i, e) {
+					var recordLength = dataMainKey.length;
+					var _this = $(e);
+					for (var i = 0; i < recordLength; i++) {
+						var curr = dataMainKey[i];
+						if(curr == originalId) {
+							dataMainKey[i] = parseInt(myValue);
+						}
+					};
+					_this.attr('data-main-key', JSON.stringify(dataMainKey));
+				});
+			}
+
+			//更新DOM可见内容
+			_this.parent().html(myValue);
+		}
+	};
+
+	//表格项文本框被按下enter
 	$(document).on('keyup', '#collectionList tbody tr td input', function(e) {
 		if(e.keyCode == 13 && e.ctrlKey) {
 			var _this = $(this);
-			var thisParent = _this.parent();
-			var thisGrandparent = thisParent.parent();
-
-			var thisCollectionName = getCollectionName(thisParent);
-
-			var thisPrimaryKey = getThisPrimaryKey(thisGrandparent);
-			var dataMainKey = getThisPrimaryKey(thisGrandparent);
-
-			var thisData = getDataVal(thisGrandparent);
-			var originalId = thisData._id;
-			var id = thisData._id;
-
 			var myValue = _this.val();
 
-			if (saveTableCollection(id, thisCollectionName, myValue, thisPrimaryKey)) {
-				//更新DOM
+			_this.parent().html('<textarea style="width:100%">' + myValue + '</textarea>');
+			return false;
+		}
 
-				//更新DOM属性
-				thisData[thisCollectionName] = myValue;
-				thisGrandparent.attr('data-val', JSON.stringify(thisData));
+		if(e.keyCode == 13) {
+			executeCollectionSaving(this);
+		}
+	});
 
-				if(thisCollectionName == '_id') {
-					thisGrandparent.parent().find('tr').each(function(i, e) {
-						var recordLength = dataMainKey.length;
-						var _this = $(e);
-						for (var i = 0; i < recordLength; i++) {
-							var curr = dataMainKey[i];
-							if(curr == originalId) {
-								dataMainKey[i] = parseInt(myValue);
-							}
-						};
-						_this.attr('data-main-key', JSON.stringify(dataMainKey));
-					});
-				}
-
-				//更新DOM可见内容
-				_this.parent().html(myValue);
-			}
-			
+	//表格项多行文本框被按下enter + alt
+	$(document).on('keyup', '#collectionList tbody tr td textarea', function(e) {
+		if(e.keyCode == 13 && e.ctrlKey) {
+			executeCollectionSaving(this);
 		}
 	});
 
