@@ -752,7 +752,7 @@ $(function() {
 
 		var thisPrimaryKey = obj.attr('data-main-key');
 
-		if(typeof thisPrimaryKey == 'undefined') {
+		if(typeof thisPrimaryKey == 'undefined' || thisPrimaryKey == '') {
 			thisPrimaryKey = {};
 		}else {
 			thisPrimaryKey = JSON.parse(thisPrimaryKey);
@@ -761,15 +761,38 @@ $(function() {
 		return thisPrimaryKey;
 	}
 
+	//通过thead获取所有字段名
+	//index为第几个,若省略则返回所有
+	var getCollectionNameListByThead = function(index) {
+		index = index == null ? -1 : index;
+
+		var currentDataObj = mongoBro.getTableCollection(dbConfig.currentTableName);
+		var currentData = currentDataObj.data;
+		var collectionKeyList = mongoBro.getTableKey(currentData);
+
+		if(index != -1) {
+			return collectionKeyList[index];
+		}
+
+		return collectionKeyList;
+	}
+
 	//获得集合名称
 	var getCollectionName = function(obj) {
-		return obj.attr('data-collection-name');
+		var collectionName = obj.attr('data-collection-name');
+		if(typeof collectionName == 'undefined') {
+			//如果当前项不存在data-collection-name属性则通过thead获取当前项目对应的字段名
+			var index = obj.index() - 1;
+			return getCollectionNameListByThead(index);
+		}else {
+			return obj.attr('data-collection-name');			
+		}
 	}
 
 	//获得当前被点击项目的所有集合
 	var getDataVal = function(obj) {
 		var thisJsonData = obj.attr('data-val');
-		if(typeof thisJsonData != 'undefined') {
+		if(typeof thisJsonData != 'undefined' || thisJsonData == '') {
 			var thisData = JSON.parse(thisJsonData);
 		}else {
 			var thisData = {};
@@ -785,20 +808,36 @@ $(function() {
 			var thisGrandparent = thisParent.parent();
 
 			var thisCollectionName = getCollectionName(thisParent);
-			var thisData = getDataVal(thisGrandparent);
-			var thisPrimaryKey = getThisPrimaryKey(thisGrandparent);
 
+			var thisPrimaryKey = getThisPrimaryKey(thisGrandparent);
+			var dataMainKey = getThisPrimaryKey(thisGrandparent);
+
+			var thisData = getDataVal(thisGrandparent);
+			var originalId = thisData._id;
 			var id = thisData._id;
-			var collectionName = thisCollectionName;
+
 			var myValue = _this.val();
 
-			var value = myValue;
-
-			if (saveTableCollection(id, collectionName, value, thisPrimaryKey)) {
+			if (saveTableCollection(id, thisCollectionName, myValue, thisPrimaryKey)) {
 				//更新DOM
 
 				//更新DOM属性
+				thisData[thisCollectionName] = myValue;
+				thisGrandparent.attr('data-val', JSON.stringify(thisData));
 
+				if(thisCollectionName == '_id') {
+					thisGrandparent.parent().find('tr').each(function(i, e) {
+						var recordLength = dataMainKey.length;
+						var _this = $(e);
+						for (var i = 0; i < recordLength; i++) {
+							var curr = dataMainKey[i];
+							if(curr == originalId) {
+								dataMainKey[i] = parseInt(myValue);
+							}
+						};
+						_this.attr('data-main-key', JSON.stringify(dataMainKey));
+					});
+				}
 
 				//更新DOM可见内容
 				_this.parent().html(myValue);
