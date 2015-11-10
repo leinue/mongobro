@@ -741,9 +741,6 @@ $(function() {
 		if(thisInput.length === 0) {
 			var tmpl = '<input type="text" value="'+ thisValue +'" />';
 			_this.html(tmpl);
-		}else {
-			var newValue = thisInput.val();
-			_this.html(newValue);
 		}
 	});
 
@@ -863,14 +860,52 @@ $(function() {
 
 				//append表格进编辑框供用户编辑
 
-				var tmpl = "<tr><td></td>";
-				tmpl += '<td class="td-new-collection"><input type="text"></td>';
-				tmpl += '<td class="td-new-collection"><input type="text"></td>';
-				tmpl += '<td class="td-new-collection"><input type="text"></td>';
+				var collectionListBody = $('#collectionList tbody');
+				var collectionListBodyTr = collectionListBody.find('tr');
+				var firstCollection = collectionListBodyTr[0];
+
+				var dataMainKey = [];
+				var jsonDataMainKey = '';
+
+				var collectionNameList = getCollectionNameListByThead();
+				var tmpl = '';
+				var dataVal = {};
+
+				if(typeof firstCollection != 'undefined') {
+					//列表中已有项目
+					dataMainKey = JSON.parse($(collectionListBodyTr[0]).attr('data-main-key'));
+					dataMainKey.push(dataMainKey.length + 1);
+					jsonDataMainKey = JSON.stringify(dataMainKey);
+					for (var i = 0; i < collectionListBodyTr.length; i++) {
+						var curr = collectionListBodyTr[i];
+						$(curr).attr('data-main-key', jsonDataMainKey);
+					};
+				}else {
+					//列表中无项目
+				}
+
+				for (var i = 0; i < collectionNameList.length; i++) {
+					var curr = collectionNameList[i];
+					if(curr == '_id') {
+						tmpl += '<td class="td-new-collection"><input type="text" value="' + (collectionNameList.length) + '"></td>';						
+					}else {
+						tmpl += '<td class="td-new-collection"><input type="text"></td>';
+					}
+					dataVal[curr] = "";
+				};
+
+				var result = mongoBro.insertTableCollection(dbConfig.currentDBName, dbConfig.currentTableName,dataVal);
+
+				if(!result) {
+					return false;
+				}
+
+				dataVal = JSON.stringify(dataVal);
+
+				var tmpl = '<tr data-val=\'' + dataVal + '\' data-main-key="' + jsonDataMainKey + '"><td></td>' + tmpl;
 				tmpl += '</tr>';
 
-				$('#collectionList tbody').append(tmpl);
-
+				collectionListBody.append(tmpl);
 			},
 
 			1: function() {//删除
