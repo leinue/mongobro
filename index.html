@@ -10,21 +10,21 @@
 	<div class="container">
 
 		<header>
-			<h1>MongoBro Database Designer preview</h1>
+			<h1>MongoBro 数据库系统 设计器 预览版</h1>
 			<div id="copyright">
-				Powerd by <img width="12" height="12" src="images/logo.png"> <a href="http://ivydom.com">ivydom</a>
+				Powered by <img width="12" height="12" src="images/logo.png"> <a href="http://ivydom.com">ivydom</a>
 			</div>
 		</header>
 		
 		<section id="main-section">
 			<nav id="main-menu">
 				<ul>
-					<li id="new-db">New Database</li>
-					<li id="new-table">New table</li>
-					<li id="menu-terminal">Terminal</li>
+					<li id="new-db">新建数据库</li>
+					<li id="new-table">新建表</li>
+					<li id="menu-terminal">终端</li>
 					<li class="main-menu-title">未命名</li>
-					<li>Documents</li>
-					<li>Downloads</li>
+					<li>文档</li>
+					<li>下载</li>
 					<!-- <li>Help</li> -->
 				</ul>
 			</nav>
@@ -89,7 +89,7 @@
 	<div style="display:none" class="mongo-terminal">
 
 		<div class="terminal-top">
-			<div class="terminal-title"><span>MongoBro Terminal</span></div>
+			<div class="terminal-title"><span>MongoBro 终端</span></div>
 			<div class="terminal-control-btn">
 				<ul>
 					<li id="minify">一</li>
@@ -106,10 +106,10 @@
 	<div class="cd-popup" id="input-newdb" role="alert">
 	  <div class="cd-popup-container">
 	  	<div class="modal-header">
-	  		<h3>Create a new database</h3>
+	  		<h3>新建一个数据库</h3>
 	  	</div>
 		<div class="modal-body">
-			<input id="new-dbname" type="text" placeholder="please input a db name" />
+			<input id="new-dbname" type="text" placeholder="请输入数据库名" />
 		</div>
 	    <ul class="cd-buttons">
 	      <li><a data-callback="createNewDB('new-dbname')" href="#0">确定</a></li>
@@ -122,10 +122,10 @@
 	<div class="cd-popup" id="input-newtable">
 		<div class="cd-popup-container">
 		  	<div class="modal-header">
-		  		<h3>Create a new table</h3>
+		  		<h3>新建一张表</h3>
 		  	</div>
 			<div class="modal-body">
-				<input id="new-tablename" type="text" placeholder="please input a table name" />
+				<input id="new-tablename" type="text" placeholder="请输入表名" />
 			</div>
 		    <ul class="cd-buttons">
 		      	<li><a data-callback="createNewTable('new-tablename')" href="#0">确定</a></li>
@@ -138,10 +138,10 @@
 	<div class="cd-popup" id="rename-table">
 		<div class="cd-popup-container">
 		  	<div class="modal-header">
-		  		<h3>Rename a table</h3>
+		  		<h3>重命名一张表</h3>
 		  	</div>
 			<div class="modal-body">
-				<input id="rename-tablename" type="text" placeholder="please input the new table name" />
+				<input id="rename-tablename" type="text" placeholder="请输入新的表名" />
 			</div>
 		    <ul class="cd-buttons">
 		      	<li><a data-callback="renameTable('rename-tablename')" href="#0">确定</a></li>
@@ -154,10 +154,10 @@
 	<div class="cd-popup" id="rename-db">
 		<div class="cd-popup-container">
 		  	<div class="modal-header">
-		  		<h3>Rename a database</h3>
+		  		<h3>重命名数据库</h3>
 		  	</div>
 			<div class="modal-body">
-				<input id="rename-dbname" type="text" placeholder="please input the new db name" />
+				<input id="rename-dbname" type="text" placeholder="请输入新的数据库名" />
 			</div>
 		    <ul class="cd-buttons">
 		      	<li><a data-callback="renameDatabase('rename-dbname')" href="#0">确定</a></li>
@@ -169,15 +169,15 @@
 
 	<div class="right-menu" id="dblist-rm">
 		<ul>
-			<li id="dblist-rename">Rename</li>
-			<li id="dblist-delete">Delete</li>
+			<li id="dblist-rename">重命名</li>
+			<li id="dblist-delete">删除</li>
 		</ul>
 	</div>
 
 	<div class="cd-popup" id="delete-db">
 		<div class="cd-popup-container">
 		  	<div class="modal-header">
-		  		<h3>Are you sure to delete this database?</h3>
+		  		<h3>你确定要删除该数据库吗</h3>
 		  	</div>
 		    <ul class="cd-buttons">
 		      	<li><a data-callback="removeDB()" href="#0">确定</a></li>
@@ -190,7 +190,7 @@
 	<div class="cd-popup" id="delete-table">
 		<div class="cd-popup-container">
 		  	<div class="modal-header">
-		  		<h3>Are you sure to delete this table?</h3>
+		  		<h3>你确定要删除这张表吗</h3>
 		  	</div>
 		    <ul class="cd-buttons">
 		      	<li><a data-callback="removeTable()" href="#0">确定</a></li>
@@ -207,6 +207,22 @@
 		  	</div>
 		    <ul class="cd-buttons">
 		      	<li><a data-callback="removeCollection()" href="#0">确定</a></li>
+		      	<li><a data-callback="" href="#0">取消</a></li>
+		    </ul>
+		    <a href="#0" class="cd-popup-close img-replace"></a>
+		 </div>
+	</div>
+
+	<div class="cd-popup" id="table-fields-new">
+		<div class="cd-popup-container">
+		  	<div class="modal-header">
+		  		<h3>该数据表无字段,是否新建字段?(多个请用英文状态下逗号分割)</h3>
+		  	</div>
+			<div class="modal-body">
+				<textarea id="new-fields" type="text" placeholder="请输入新的数据库字段名"></textarea>
+			</div>
+		    <ul class="cd-buttons">
+		      	<li><a data-callback="addTableFields('new-fields')" href="#0">确定</a></li>
 		      	<li><a data-callback="" href="#0">取消</a></li>
 		    </ul>
 		    <a href="#0" class="cd-popup-close img-replace"></a>

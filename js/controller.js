@@ -264,12 +264,14 @@ $(function() {
 
 	//确定按钮被按下
 	$('.cd-buttons li:first-child a').click(function(){
-		$('.cd-popup').removeClass('is-visible');
 		var callback = $(this).attr('data-callback');
 		if(typeof callback == 'undefined') {
 			return false;
 		}
 		var callfunc = eval(callback);
+		if(callfunc == undefined || callfunc == true) {
+			$('.cd-popup').removeClass('is-visible');
+		}
 	});
 
 	//取消按钮被按下
@@ -900,6 +902,16 @@ $(function() {
 					};
 				}else {
 					//列表中无项目
+					var tableKey = mongoBro.getTableKey(dbConfig.currentTableName);
+					if(tableKey.length === 0) {
+						
+						modal.show('table-fields-new');
+
+					}else {
+
+					}
+
+					return true;
 				}
 
 				for (var i = 0; i < collectionNameList.length; i++) {
@@ -1158,6 +1170,18 @@ $(function() {
 		var dbname = dbConfig.currentDBName;
 		var tableName = getCurrentTableName();
 		return mongoBro.updateTableCollection(dbname, tableName, id, collectionName, value);
+
+	}
+
+	//新建数据表字段
+	var addTableFields = function(id) {
+		var fieldNames = $('#' + id).val();
+
+		if(fieldNames == '') {
+			alert('字段名不能为空');
+			return false;
+		}
+
 
 	}
 
