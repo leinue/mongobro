@@ -612,23 +612,39 @@
 		return keyList;
 	}
 
-	mongoBro.prototype.insertTableCollection = function(dbname, tableName, data) {
+	mongoBro.prototype.insertTableCollection = function(dbname, tableName, data, isAddKey) {
 
 		if(dbname == null || tableName == null || data == null ) {
 			return false;
 		}
 
+		isAddKey = isAddKey == null ? false : isAddKey;
+
+		//add key to person_edit2 in test set fuck,shit
+
 		var dataExists = this.getTableCollection(tableName);
 		var realData = dataExists.data.data;
+
 		if(typeof realData != 'undefined') {
 			var dataCount = realData.length;			
+			for (var i = 0; i < dataExists.data.data.length; i++) {
+				for (var key in data) {
+					var currValue = data[key];
+					if(typeof dataExists.data.data[i][key] == 'undefined') {
+						dataExists.data.data[i][key] = currValue;
+					}
+				};
+			};
 		}else {
 			var dataCount = 0;
 			dataExists.data.data = [];
 		}
 
-		dataExists.data.data[dataCount] = data;
-		dataExists.data.data[dataCount]._id = dataCount + 1;
+		if(!isAddKey || dataCount === 0) {
+			dataExists.data.data[dataCount] = data;
+			dataExists.data.data[dataCount]._id = dataCount + 1;
+		}
+		
  		localStorage[tableName] = JSON.stringify(dataExists);
 
 		return this;
@@ -638,7 +654,6 @@
 		var collectionList = [];
 		if(typeof tableCollection != 'undefined') {
 			for(var name in tableCollection.data) {
-				console.log(tableCollection.data);
 				if(typeof tableCollection.data == 'object') {
 					for (var i = 0; i < tableCollection.data.length; i++) {
 						var currentTableCollection = tableCollection.data[i];
@@ -682,7 +697,7 @@
 
 		console.log(tmp);
 
-		this.insertTableCollection(dbname, tableName, tmp);
+		this.insertTableCollection(dbname, tableName, tmp, true);
 	}
 
 	window.mongoBro = new mongoBro();
