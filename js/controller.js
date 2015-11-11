@@ -905,7 +905,7 @@ $(function() {
 				for (var i = 0; i < collectionNameList.length; i++) {
 					var curr = collectionNameList[i];
 					if(curr == '_id') {
-						tmpl += '<td class="td-new-collection"><input type="text" value="' + (collectionNameList.length) + '"></td>';						
+						tmpl += '<td class="td-new-collection"><input type="text" value="' + (dataMainKey.length) + '"></td>';
 					}else {
 						tmpl += '<td class="td-new-collection"><input type="text"></td>';
 					}
