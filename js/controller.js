@@ -904,9 +904,7 @@ $(function() {
 					//列表中无项目
 					var tableKey = mongoBro.getTableKey(dbConfig.currentTableName);
 					if(tableKey.length === 0) {
-						
 						modal.show('table-fields-new');
-
 					}else {
 
 					}
@@ -1182,7 +1180,21 @@ $(function() {
 			return false;
 		}
 
+		var fieldsList = fieldNames.split(',');
 
+		var data = {};
+
+		for (var i = 0; i < fieldsList.length; i++) {
+			var curr = fieldsList[i];
+			if(curr != '') {
+				data[curr] = "";				
+			}
+		};
+
+		console.log(dbConfig.currentDBName, getCurrentTableName(), data);
+
+		mongoBro.insertTableCollection(dbConfig.currentDBName, dbConfig.currentTableName, data);
+		appendCollection(getCurrentTableName());
 	}
 
 });

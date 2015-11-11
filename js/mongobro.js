@@ -619,8 +619,14 @@
 		}
 
 		var dataExists = this.getTableCollection(tableName);
+		console.log(dataExists);
 		var realData = dataExists.data.data;
-		var dataCount = realData.length;
+		if(typeof realData != 'undefined') {
+			var dataCount = realData.length;			
+		}else {
+			var dataCount = 0;
+			dataExists.data.data = [];
+		}
 
 		dataExists.data.data[dataCount] = data;
 		dataExists.data.data[dataCount]._id = dataCount + 1;
