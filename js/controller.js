@@ -238,7 +238,7 @@ $(function() {
 		add: function(obj, args) {
 			//add key to person_edit2 in test set fuck,shit,bitch values ha,ha,ha
 			var tokenList =  [ "key", "to", "TABLENAME", "in", "DBNAME", "set", "FIELDSNAME", "values", "VALUELIST" ];
-			var indexMust = [0, 1, 3, 5, 7];
+			var indexMust = [0, 1, 3, 5];
 
 			var syntax = 0;
 
@@ -255,14 +255,26 @@ $(function() {
 			};
 
 			if(syntax > 0) {
-				console.log('ddd');
 				var tips = '\r\n       ' + '语法错误' + '\r\n       Token错误: ' + JSON.stringify(errorList);
 				var all = terminalCommands.getTerminalAllContent(obj);
 				terminalCommands.appendNewLineInTerminal(all + tips, obj);
 				return false;
 			}
 
+			var tableName = args[2];
+			var DBName = args[4];
+			var fieldsName = args[6];
+			var valueList = args[8];
 
+			var fieldsNameList = fieldsName.split(',');
+
+			if(typeof valueList != 'undefined') {
+				var valueList = valueList.split(',');
+			}else {
+				var valueList = [];
+			}
+
+			mongoBro.addTableKey(DBName, tableName, fieldsNameList, valueList);
 
 		}
 

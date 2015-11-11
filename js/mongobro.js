@@ -658,6 +658,31 @@
 
 		return false;
 		
+	},
+
+	mongoBro.prototype.addTableKey = function(dbname, tableName, keyList, valueList) {
+
+		var tmp = {};
+
+		if(keyList == null) {
+			return false;
+		}
+
+		if(keyList.length != valueList.length || typeof keyList == 'undefined') {
+			valueList = [];
+			for (var i = 0; i < keyList.length; i++) {
+				valueList.push('');
+			};
+		}
+
+		for (var i = 0; i < keyList.length; i++) {
+			var currKey = keyList[i];
+			tmp[currKey] = valueList[i];
+		};
+
+		console.log(tmp);
+
+		this.insertTableCollection(dbname, tableName, tmp);
 	}
 
 	window.mongoBro = new mongoBro();
