@@ -80,6 +80,20 @@ $(function() {
 　　    return this.replace(/(\s*$)/g,"");
 　　};
 
+	//拓展Number对象
+	var inArray = function(search, array) {
+		for(var i in array){
+	        if(array[i]==search){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
+	var notInArray = function(search, array) {
+		return !inArray(search, array);
+	}
+
 	//终端命令列表
 	var terminalCommands = {
 
@@ -106,6 +120,12 @@ $(function() {
 			$(obj).val(e + '\r\n' + TIPS);
 			var scrollTop = $("#" + terminalConfig.EDITORID)[0].scrollHeight;
             $("#"+terminalConfig.EDITORID).scrollTop(scrollTop);
+		},
+
+		echo: function(obj, args, val) {
+			var tips = val;
+			var all = terminalCommands.getTerminalAllContent('\r\n       ' + obj);
+			terminalCommands.appendNewLineInTerminal(all + tips, obj);
 		},
 
 		getAllCmds: function() { //获得所有命令
@@ -213,6 +233,37 @@ $(function() {
 
 		exit: function(obj, args) {
 			toggleTerminal();
+		},
+
+		add: function(obj, args) {
+			//add key to person_edit2 in test set fuck,shit,bitch values ha,ha,ha
+			var tokenList =  [ "key", "to", "TABLENAME", "in", "DBNAME", "set", "FIELDSNAME", "values", "VALUELIST" ];
+			var indexMust = [0, 1, 3, 5, 7];
+
+			var syntax = 0;
+
+			var errorList = [];
+
+			for (var i = 0; i < tokenList.length; i++) {
+				var currToken = tokenList[i];
+				if(inArray(i, indexMust)) {
+					if(typeof args[i] == 'undefined' || args[i] != tokenList[i]) {
+						errorList.push(tokenList[i]);
+						syntax ++;
+					}
+				}
+			};
+
+			if(syntax > 0) {
+				console.log('ddd');
+				var tips = '\r\n       ' + '语法错误' + '\r\n       Token错误: ' + JSON.stringify(errorList);
+				var all = terminalCommands.getTerminalAllContent(obj);
+				terminalCommands.appendNewLineInTerminal(all + tips, obj);
+				return false;
+			}
+
+
+
 		}
 
 	};
@@ -1190,8 +1241,6 @@ $(function() {
 				data[curr] = "";				
 			}
 		};
-
-		console.log(dbConfig.currentDBName, getCurrentTableName(), data);
 
 		mongoBro.insertTableCollection(dbConfig.currentDBName, dbConfig.currentTableName, data);
 		appendCollection(getCurrentTableName());

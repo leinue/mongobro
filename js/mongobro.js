@@ -619,7 +619,6 @@
 		}
 
 		var dataExists = this.getTableCollection(tableName);
-		console.log(dataExists);
 		var realData = dataExists.data.data;
 		if(typeof realData != 'undefined') {
 			var dataCount = realData.length;			
