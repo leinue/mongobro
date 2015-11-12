@@ -253,8 +253,6 @@
 
 		var tableNameId = this.isTableExists(dbname,oldName);
 
-		console.log(tableNameId);
-
 		if(tableNameId === false) {
 			return false;
 		}
@@ -404,7 +402,6 @@
 			if(typeof tableList[key] == 'object') {
 				var tableObj = tableList[key];
 				var databaseName = tableObj.database;
-
 				if(databaseName == dbname){
 					result.push(tableObj.tableName);
 				}
@@ -515,7 +512,13 @@
 			id ++;//mongobro中主键从1开始
 		}
 
-		for (var i = 0; i < realData.length; i++) {
+		var datsLength = realData.length;
+
+		if(typeof datsLength == 'undefined') {
+			datsLength = this.getObjLength(realData);
+		}
+
+		for (var i = 0; i < datsLength; i++) {
 			var curr = realData[i];
 			if(curr._id == id) {
 				realData[i][collectionName] = value;
@@ -626,8 +629,19 @@
 		var realData = dataExists.data.data;
 
 		if(typeof realData != 'undefined') {
-			var dataCount = realData.length;			
-			for (var i = 0; i < dataExists.data.data.length; i++) {
+			var dataCount = realData.length;
+
+			if(typeof dataCount == 'undefined') {
+				dataCount = this.getObjLength(realData);
+			}
+
+			var realDataLength = dataExists.data.data.length;
+
+			if(typeof realDataLength == 'undefined') {
+				realDataLength = this.getObjLength(dataExists.data.data);
+			}
+
+			for (var i = 0; i < realDataLength; i++) {
 				for (var key in data) {
 					var currValue = data[key];
 					if(typeof dataExists.data.data[i][key] == 'undefined') {
@@ -644,10 +658,18 @@
 			dataExists.data.data[dataCount] = data;
 			dataExists.data.data[dataCount]._id = dataCount + 1;
 		}
-		
+
  		localStorage[tableName] = JSON.stringify(dataExists);
 
 		return this;
+	}
+
+	mongoBro.prototype.getObjLength = function(obj) {
+		var count = 0;
+		for(var key in obj) {
+			count ++;
+		}
+		return count;
 	}
 
 	mongoBro.prototype.getTableKey = function(tableCollection) {
@@ -655,7 +677,11 @@
 		if(typeof tableCollection != 'undefined') {
 			for(var name in tableCollection.data) {
 				if(typeof tableCollection.data == 'object') {
-					for (var i = 0; i < tableCollection.data.length; i++) {
+					var dataLength = tableCollection.data.length;
+					if(typeof dataLength == 'undefined') {
+						dataLength = this.getObjLength(tableCollection.data);						
+					}
+					for (var i = 0; i < dataLength; i++) {
 						var currentTableCollection = tableCollection.data[i];
 						for(var key in currentTableCollection) {
 							collectionList.push(key);
@@ -694,8 +720,6 @@
 			var currKey = keyList[i];
 			tmp[currKey] = valueList[i];
 		};
-
-		console.log(tmp);
 
 		this.insertTableCollection(dbname, tableName, tmp, true);
 	}

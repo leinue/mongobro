@@ -284,7 +284,6 @@ $(function() {
 
 	//数据库是否点击了二级菜单
 	function isDBListClick2ndLevel() {
-		console.log(runtime.dbList.ClickLevel);
 		return runtime.dbList.ClickLevel === config.DB_LIST.SECOND_LEVEL;
 	}
 
@@ -395,7 +394,6 @@ $(function() {
 				dbConfig.currentRightClickTableName = _thisTableName;
 				runtime.dbList.ClickLevel = config.DB_LIST.SECOND_LEVEL; //右击第二层
 			}
-			console.log(runtime.dbList.ClickLevel);
 			return false;
 		}
 	}).bind('contextmenu',function(e){
@@ -670,8 +668,6 @@ $(function() {
 			var tableList = mongoBro.getTableByDBName(obj[i]);
 			var second = '<ul class="second">';
 
-			console.log(tableList);
-
 			if (tableList.length !== 0) {
 				for (var j = tableList.length - 1; j >= 0; j--) {
 					var tableName = mongoBro.getTableCollection(tableList[j]);
@@ -785,7 +781,6 @@ $(function() {
 					runtime.collection.selected.push(val);
 				}
 
-				console.log(runtime.collection.selected);
 			}
 
 		};
@@ -874,6 +869,7 @@ $(function() {
 
 		var thisData = getDataVal(thisGrandparent);
 		var originalId = thisData._id;
+
 		var id = thisData._id;
 
 		var myValue = _this.val();
