@@ -276,6 +276,11 @@ $(function() {
 
 			mongoBro.addTableKey(DBName, tableName, fieldsNameList, valueList);
 
+		},
+
+		rollback: function(obj, args) {
+			rollback();
+			getDBExists();
 		}
 
 	};
@@ -1035,8 +1040,11 @@ $(function() {
 	//读取已有数据库
 	var getDBExists = function() {
 		var allDB = mongoBro.getDatabases();
+		console.log(allDB);
 		if(allDB != null) {
 			appendDBList(allDB);
+		}else {
+			$('.file-list ul').html('');
 		}
 	};
 

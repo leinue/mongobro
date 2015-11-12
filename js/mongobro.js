@@ -788,8 +788,7 @@ var rollback = function(remove) {
 
 	console.log(mongoBro.updateTCByObject('test', 'xieyang', 1, {
 		name: '蛤蛤',
-		sex: 'LGBT',
-		fuck: 'me'
+		sex: 'LGBT'
 	}));
 
 	console.log('修改person表的名称');
@@ -803,4 +802,4 @@ var rollback = function(remove) {
 }
 
 
-rollback();
+// rollback();
