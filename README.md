@@ -70,8 +70,9 @@
 </li>
 <li><a href="#拓展阅读">拓展阅读</a><ul>
 <li><ul>
-<li><a href="#1-mongobro-github">1. MongoBro GitHub</a></li>
-<li><a href="#2-mongobro-开发者博客">2. MongoBro 开发者博客</a></li>
+<li><a href="#1-mongobro-官网">1. MongoBro 官网</a></li>
+<li><a href="#2-mongobro-github-1">2. MongoBro GitHub</a></li>
+<li><a href="#3-mongobro-开发者博客">3. MongoBro 开发者博客</a></li>
 </ul>
 </li>
 </ul>
@@ -453,4 +454,4 @@ valueList: 值列表 <br>
 <dd><img src="http://img.anasit.com/uploads/2015/11/t.jpg" alt="console" title=""></dd>
 </dl><div class="md-section-divider"></div><h1 id="拓展阅读" data-anchor-id="ldjj">拓展阅读</h1><blockquote class="white-blockquote" data-anchor-id="k4ve">
   <p>MongoBro刚问世,功能还在不断完善中,期待您的使用和建议!</p>
-</blockquote><div class="md-section-divider"></div><h3 id="1-mongobro-github" data-anchor-id="p95a">1. <a target="_blank" href="https://github.com/leinue/mongobro">MongoBro GitHub</a></h3><div class="md-section-divider"></div><h3 id="2-mongobro-开发者博客" data-anchor-id="038o">2. <a target="_blank" href="http://ivydom.com">MongoBro 开发者博客</a></h3></div>
+</blockquote><div class="md-section-divider"></div><h3 id="1-mongobro-官网" data-anchor-id="q241">1. <a target="_blank" href="http://mb.ivydom.com">MongoBro 官网</a></h3><div class="md-section-divider"></div><h3 id="2-mongobro-github-1" data-anchor-id="p95a">2. <a target="_blank" href="https://github.com/leinue/mongobro">MongoBro GitHub</a></h3><div class="md-section-divider"></div><h3 id="3-mongobro-开发者博客" data-anchor-id="038o">3. <a target="_blank" href="http://ivydom.com">MongoBro 开发者博客</a></h3></div>
