@@ -415,6 +415,8 @@ $(function() {
 		$('#dblist-rm').hide();
 	});
 
+	//https://www.zybuluo.com/ivydom/note/217261
+
 	$(document).on('click','.file-list ul li.active ul li',function(){
 		
 		var _this = $(this);
@@ -646,6 +648,16 @@ $(function() {
 	//新建数据库按钮被按下
 	$('#main-menu ul li#new-db').click(function(){
 		modal.show('input-newdb');
+	});
+
+	//查看文档按钮被按下
+	$('#main-menu ul li#view-document').click(function(){
+		window.open("https://www.zybuluo.com/ivydom/note/217261");
+	});
+
+	//下载源代码
+	$('#main-menu ul li#download').click(function(){
+		window.open("https://github.com/leinue/mongobro");
 	});
 
 	//新建数据库表按钮被按下

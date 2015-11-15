@@ -327,7 +327,7 @@
 				data : {
 					data
 				}
-			}
+			};
 
 			this.addTableList(dbname,tableName);
 
@@ -800,6 +800,5 @@ var rollback = function(remove) {
 	}
 
 }
-
 
 // rollback();
